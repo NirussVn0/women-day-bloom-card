@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 9% 98%; /* stone-50 */
+    --foreground: 24 10% 10%; /* stone-900 */
+    --link: 346 87% 60%; /* rose-500 */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+    
+    /* Slightly warmer border colors */
+    --border: 20 14% 90%; 
+    --input: 20 14% 90%;
+    --ring: 346 87% 60%;
+    
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-stone-200;
+  }
+  body {
+    @apply bg-stone-50 text-stone-900;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-stone-900 tracking-tight;
+  }
+}
+
+/* Tiptap specific styling */
+.tiptap-editor p.is-editor-empty:first-child::before {
+  color: #a8a29e; /* stone-400 */
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Collaborative Cursors */
+.collaboration-cursor__caret {
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  margin-left: -2px;
+  margin-right: -2px;
+  pointer-events: none;
+  position: relative;
+  word-break: normal;
+}
+
+.collaboration-cursor__label {
+  border-radius: 3px 3px 3px 0;
+  color: #fff;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  left: -2px;
+  line-height: normal;
+  padding: 2px 6px;
+  position: absolute;
+  top: -1.5em;
+  user-select: none;
+  white-space: nowrap;
+}

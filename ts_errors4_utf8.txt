@@ -1,0 +1,7 @@
+﻿app/(dashboard)/layout.tsx(46,23): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+app/(dashboard)/page.tsx(51,23): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+app/api/liveblocks-auth/route.ts(35,9): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+components/editor/CollaborativeEditor.tsx(48,9): error TS2353: Object literal may only specify known properties, and 'history' does not exist in type 'Partial<StarterKitOptions>'.
+lib/actions.ts(5,10): error TS2305: Module '"@prisma/client"' has no exported member 'Privacy'.
+lib/prisma.ts(1,10): error TS2305: Module '"@prisma/client"' has no exported member 'PrismaClient'.

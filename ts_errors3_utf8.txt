@@ -1,0 +1,17 @@
+﻿app/(dashboard)/layout.tsx(46,23): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+app/(dashboard)/page.tsx(51,23): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+app/api/liveblocks-auth/route.ts(29,42): error TS2339: Property 'stringify' does not exist on type 'Math'.
+app/api/liveblocks-auth/route.ts(35,9): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+components/editor/CollaborativeEditor.tsx(48,9): error TS2353: Object literal may only specify known properties, and 'history' does not exist in type 'Partial<StarterKitOptions>'.
+components/ui/avatar.tsx(6,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/button.tsx(2,40): error TS2307: Cannot find module 'class-variance-authority' or its corresponding type declarations.
+components/ui/button.tsx(5,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/dialog.tsx(7,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/dropdown-menu.tsx(7,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/input.tsx(3,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/label.tsx(6,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/popover.tsx(6,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+components/ui/tooltip.tsx(6,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+lib/actions.ts(5,10): error TS2305: Module '"@prisma/client"' has no exported member 'Privacy'.
+lib/prisma.ts(1,10): error TS2305: Module '"@prisma/client"' has no exported member 'PrismaClient'.

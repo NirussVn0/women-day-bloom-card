@@ -1,0 +1,52 @@
+{
+  "name": "temp-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
+    "@liveblocks/client": "^3.15.0",
+    "@liveblocks/node": "^3.15.0",
+    "@liveblocks/react": "^3.15.0",
+    "@liveblocks/yjs": "^3.15.0",
+    "@prisma/client": "^5.22.0",
+    "@tiptap/extension-collaboration": "^3.20.0",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
+    "@tiptap/extension-placeholder": "^3.20.0",
+    "@tiptap/pm": "^3.20.0",
+    "@tiptap/react": "^3.20.0",
+    "@tiptap/starter-kit": "^3.20.0",
+    "canvas-confetti": "^1.9.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.35.0",
+    "lucide-react": "^0.577.0",
+    "nanoid": "^5.1.6",
+    "next": "16.1.6",
+    "next-auth": "^5.0.0-beta.30",
+    "prisma": "^5.22.0",
+    "radix-ui": "^1.4.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.5.0",
+    "yjs": "^13.6.29"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
