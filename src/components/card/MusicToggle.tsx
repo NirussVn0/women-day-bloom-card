@@ -57,17 +57,49 @@ export function MusicToggle({ src }: { src?: string }) {
   }, [playing])
 
   const musicSrc = src || "/music.mp3"
+  const [volume, setVolume] = useState(0.6)
+  const [showVolumeTip, setShowVolumeTip] = useState(false)
+  const hideTipTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  // Set default volume
+  // Sync volume state with audio element
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = 0.6
+      audioRef.current.volume = volume
     }
-  }, [])
+  }, [volume])
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (!audioRef.current) return
+    
+    // Prevent page scrolling while adjusting volume
+    e.preventDefault()
+    
+    // e.deltaY > 0 means scrolling down (decrease volume)
+    // e.deltaY < 0 means scrolling up (increase volume)
+    const delta = e.deltaY < 0 ? 0.1 : -0.1
+    const newVolume = Math.min(Math.max(0, volume + delta), 1)
+    
+    setVolume(newVolume)
+    setShowVolumeTip(true)
+    
+    // Auto-hide volume tip after 1.5s
+    if (hideTipTimeout.current) clearTimeout(hideTipTimeout.current)
+    hideTipTimeout.current = setTimeout(() => setShowVolumeTip(false), 1500)
+    
+    // Auto-play if unmuted via scroll
+    if (newVolume > 0 && !playing && audioRef.current.paused) {
+      audioRef.current.play().catch(() => {})
+      setPlaying(true)
+    }
+  }
 
   return (
-    <>
+    <div 
+      className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 flex flex-col items-center gap-2"
+      onWheel={handleWheel}
+    >
       <audio ref={audioRef} src={musicSrc} loop preload="auto" />
+      
       <button
         ref={btnRef}
         onClick={(e) => {
@@ -75,15 +107,24 @@ export function MusicToggle({ src }: { src?: string }) {
           toggle()
         }}
         style={{ opacity: 0 }}
-        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 w-11 h-11 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 shadow-lg flex items-center justify-center transition-all hover:bg-rose-50 hover:scale-110 cursor-pointer"
+        className="w-11 h-11 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 shadow-lg flex items-center justify-center transition-all hover:bg-rose-50 hover:scale-110 cursor-pointer"
         aria-label={playing ? "Tắt nhạc" : "Bật nhạc"}
+        title="Cuộn chuột để chỉnh âm lượng"
       >
-        {playing ? (
+        {playing && volume > 0 ? (
           <PiMusicNoteFill className="w-5 h-5 text-rose-500" />
         ) : (
           <PiSpeakerSlashFill className="w-5 h-5 text-stone-400" />
         )}
       </button>
-    </>
+
+      {/* Volume indicator tooltip */}
+      <div 
+        className={`px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm shadow border border-stone-100 text-xs font-medium text-stone-600 transition-opacity duration-300 pointer-events-none ${showVolumeTip ? 'opacity-100' : 'opacity-0'}`}
+      >
+        {Math.round(volume * 100)}%
+      </div>
+    </div>
   )
 }
+
