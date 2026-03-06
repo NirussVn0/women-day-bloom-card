@@ -1,19 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
-    --background: 60 9% 98%; /* stone-50 */
-    --foreground: 24 10% 10%; /* stone-900 */
-    --link: 346 87% 60%; /* rose-500 */
+    --background: 60 9% 98%;
+    --foreground: 24 10% 10%;
+    --link: 346 87% 60%;
     
     --card: 0 0% 100%;
     --card-foreground: 24 10% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 10%;
     
-    /* Slightly warmer border colors */
     --border: 20 14% 90%; 
     --input: 20 14% 90%;
     --ring: 346 87% 60%;
@@ -24,13 +21,16 @@
 
 @layer base {
   * {
-    @apply border-stone-200;
+    border-color: var(--color-stone-200);
   }
   body {
-    @apply bg-stone-50 text-stone-900;
+    background-color: var(--color-stone-50);
+    color: var(--color-stone-900);
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif text-stone-900 tracking-tight;
+    font-family: var(--font-serif);
+    color: var(--color-stone-900);
+    letter-spacing: -0.025em;
   }
 }
 
