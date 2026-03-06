@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NirussVn0 Dev — Thiệp Chúc Mừng 8/3 ✿
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Anime.js](https://img.shields.io/badge/Anime.js-4-ff6b6b)
 
-First, run the development server:
+Ứng dụng web tạo thiệp chúc mừng Ngày Quốc tế Phụ nữ 8/3 với hiệu ứng đẹp mắt, hoa rơi, nhạc nền và mã QR trái tim.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+> **Author**: [NirussVn0](https://sabicoder.xyz)
+
+---
+
+## ✨ Tính Năng
+
+| # | Tính năng | Mô tả |
+|---|-----------|-------|
+| 1 | **2 Theme** | "Catch Me 🌸" (nút chạy trốn) & "Thư Tình 💌" (phong bì vintage) |
+| 2 | **Anime.js** | Hoa rơi, hoa hồng nở, phong bì bay, confetti |
+| 3 | **Nhạc nền** | Auto-play + nút bật/tắt luôn hiển thị |
+| 4 | **Upload ảnh** | Ảnh hiển thị trong thư (max 500KB) |
+| 5 | **QR trái tim** | Canvas heart với QR code bên trong |
+| 6 | **Tên người gửi** | URL: `/card/ten-nguoi-gui-randomId` |
+| 7 | **Link 10 ngày** | Tự cleanup hết hạn |
+| 8 | **Watermark** | "Điều bất ngờ bởi NirussVn0" → sabicoder.xyz |
+
+---
+
+## 🏗️ Kiến Trúc
+
+```
+app/
+├── layout.tsx                # Root layout + fonts (Inter, Playfair, Dancing Script)
+├── page.tsx                  # Trang tạo thiệp
+└── card/[id]/page.tsx        # Trang xem thiệp
+
+components/
+├── BrandWatermark.tsx        # Badge → sabicoder.xyz
+├── card/
+│   ├── CardView.tsx          # Router 2 themes
+│   ├── CreatorForm.tsx       # Form tạo thiệp + HeartQR
+│   ├── MemeOpening.tsx       # Mở đầu meme (chung)
+│   ├── EnvelopeLetter.tsx    # Theme A: phong bì
+│   ├── DodgeButton.tsx       # Theme A: nút chạy trốn
+│   ├── MessageReveal.tsx     # Theme A: tin nhắn + confetti
+│   ├── RoseDrawing.tsx       # Theme B: SVG hoa hồng
+│   ├── EnvelopeScene.tsx     # Theme B: phong bì + trái tim CSS
+│   ├── LetterModal.tsx       # Theme B: thư tay (600x350px per reference)
+│   ├── HeartQR.tsx           # Canvas QR trái tim
+│   └── MusicToggle.tsx       # Bật/tắt nhạc
+└── effects/
+    ├── PetalRain.tsx         # Cánh hoa rơi
+    └── RoseGift.tsx          # Hoa hồng nở
+
+lib/
+├── store.ts                  # In-memory store + expiry + slug
+└── actions.ts                # Server actions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧱 Design Principles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **SRP**: Mỗi component 1 trách nhiệm (`HeartDecor`, `GiftSection`, `LetterTextContent`)
+- **OCP**: Dễ thêm theme mới qua CardView state machine
+- **DRY**: `PetalRain`, `BrandWatermark` tái sử dụng xuyên suốt
+- **Type Safety**: TypeScript strict, interface cho tất cả props
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install        # Cài dependencies
+npm run dev        # Chạy dev server → http://localhost:3000
+npx tsc --noEmit   # Type check
+npm run build      # Build production
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Thay đổi nội dung thiệp
 
-## Deploy on Vercel
+1. Mở `http://localhost:3000`
+2. Chọn theme, nhập tên người nhận, tin nhắn, tên người gửi
+3. (Tùy chọn) Upload ảnh người nhận (max 500KB)
+4. Nhấn "Tạo thiệp" → lấy link gửi
+5. Tải QR trái tim để gửi qua tin nhắn
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Thêm nhạc nền
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copy file `.mp3` vào thư mục `public/` và đặt tên `music.mp3`.
+
+---
+
+## 📦 Tech Stack
+
+| Layer | Tech |
+|-------|------|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Animations | Anime.js 4 |
+| Icons | react-icons (Phosphor) |
+| QR | qrcode |
+| Fonts | Dancing Script, Inter, Playfair Display |
+
+---
+
+## 📄 License
+
+Made with ❤️ by [NirussVn0](https://sabicoder.xyz)

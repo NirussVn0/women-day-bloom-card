@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Inter, Playfair_Display, Dancing_Script } from "next/font/google"
 import "./globals.css"
 
 const inter = Inter({
@@ -10,6 +10,12 @@ const inter = Inter({
 const playfair = Playfair_Display({
   subsets: ["latin", "vietnamese"],
   variable: "--font-serif",
+})
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-cursive",
+  weight: ["400", "700"],
 })
 
 export const metadata: Metadata = {
@@ -23,10 +29,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="vi" className={`${inter.variable} ${playfair.variable} ${dancingScript.variable}`}>
       <body className="min-h-screen antialiased">
         {children}
       </body>
     </html>
   )
 }
+
