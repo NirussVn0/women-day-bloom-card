@@ -7,6 +7,7 @@ import {
   PiArrowRightBold, PiCopyBold, PiCheckBold, PiSparkle,
   PiFlowerTulipFill, PiEnvelopeSimpleFill, PiImageBold, PiXBold
 } from "react-icons/pi"
+import { HeartQR } from "./HeartQR"
 
 const THEMES = [
   { id: "catch-me", label: "Catch Me 🌸", desc: 'Nút "Không" chạy trốn — buộc phải bấm "Có"!', icon: PiFlowerTulipFill },
@@ -14,11 +15,12 @@ const THEMES = [
 ]
 
 export function CreatorForm() {
+  const [senderName, setSenderName] = useState("")
   const [recipientName, setRecipientName] = useState("")
   const [message, setMessage] = useState("")
   const [theme, setTheme] = useState("catch-me")
   const [recipientImage, setRecipientImage] = useState<string | undefined>()
-  const [result, setResult] = useState<{ id: string } | null>(null)
+  const [result, setResult] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
@@ -68,15 +70,15 @@ export function CreatorForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!recipientName.trim() || !message.trim()) return
+    if (!senderName.trim() || !recipientName.trim() || !message.trim()) return
 
     startTransition(async () => {
-      const res = await createCard({ recipientName, message, theme, recipientImage })
+      const res = await createCard(senderName, recipientName, message, theme, recipientImage)
       setResult(res)
     })
   }
 
-  const shareUrl = result ? `${typeof window !== "undefined" ? window.location.origin : ""}/card/${result.id}` : ""
+  const shareUrl = result ? `${typeof window !== "undefined" ? window.location.origin : ""}/card/${result}` : ""
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl)
@@ -111,9 +113,14 @@ export function CreatorForm() {
               {copied ? "Đã copy!" : "Copy"}
             </button>
           </div>
+          
+          <div className="mt-8 pt-8 border-t border-stone-100 flex flex-col items-center">
+            <p className="text-sm text-stone-500 mb-4">Hoặc tải mã QR để gửi trực tiếp:</p>
+            <HeartQR url={shareUrl} recipientName={recipientName} />
+          </div>
         </div>
         <button
-          onClick={() => { setResult(null); setRecipientName(""); setMessage(""); setRecipientImage(undefined) }}
+          onClick={() => { setResult(null); setSenderName(""); setRecipientName(""); setMessage(""); setRecipientImage(undefined) }}
           className="text-sm text-stone-500 hover:text-stone-700 underline underline-offset-4 transition-colors"
         >
           ← Tạo thiệp khác
@@ -128,6 +135,20 @@ export function CreatorForm() {
       onSubmit={handleSubmit}
       className="w-full max-w-lg mx-auto space-y-6"
     >
+      <div className="space-y-2 form-field" style={{ opacity: 0 }}>
+        <label className="block text-sm font-medium text-stone-600">
+          Tên bạn (người gửi)
+        </label>
+        <input
+          type="text"
+          value={senderName}
+          onChange={(e) => setSenderName(e.target.value)}
+          placeholder="Tên của bạn..."
+          className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all text-base"
+          required
+        />
+      </div>
+
       <div className="space-y-2 form-field" style={{ opacity: 0 }}>
         <label className="block text-sm font-medium text-stone-600">
           Tên người nhận
@@ -223,7 +244,7 @@ export function CreatorForm() {
       <div className="form-field" style={{ opacity: 0 }}>
         <button
           type="submit"
-          disabled={isPending || !recipientName.trim() || !message.trim()}
+          disabled={isPending || !senderName.trim() || !recipientName.trim() || !message.trim()}
           className="w-full py-4 px-6 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base cursor-pointer"
         >
           {isPending ? (

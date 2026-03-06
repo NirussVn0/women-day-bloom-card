@@ -51,16 +51,17 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
       loop: true,
     })
 
-    // Floating hearts animation
+    // Floating hearts animation (matching reference exact CSS)
     const hearts = rootRef.current.querySelectorAll(".float-heart")
     const durations = [1000, 2000, 1500, 2300, 1700]
     hearts.forEach((heart, i) => {
       animate(heart, {
         translateY: [0, -150],
+        rotate: [-45, -45], // Need to explicitly preserve the -45deg rotation for the heart shape
         scale: [0.3, 1.3],
         opacity: [1, 0.5],
         duration: durations[i],
-        ease: "out(3)",
+        ease: "outQuad",
         loop: true,
       })
     })
@@ -113,7 +114,7 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         <div className="valentines relative cursor-pointer" style={{ top: 50 }} onClick={onOpenLetter}>
           {/* Floating hearts */}
           <div className="absolute" style={{ top: 0, left: 0, width: "100%" }}>
-            {[10, 50, 80, 120, 150].map((left, i) => (
+            {[10, 30, 50, 70, 90].map((left, i) => (
               <CSSHeart
                 key={i}
                 className="float-heart"

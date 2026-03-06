@@ -10,10 +10,11 @@ interface LetterModalProps {
   recipientName: string
   message: string
   recipientImage?: string
+  senderName: string
   onClose: () => void
 }
 
-export function LetterModal({ recipientName, message, recipientImage, onClose }: LetterModalProps) {
+export function LetterModal({ recipientName, message, recipientImage, senderName, onClose }: LetterModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const [titleText, setTitleText] = useState("")
   const [bodyText, setBodyText] = useState("")
@@ -184,6 +185,12 @@ export function LetterModal({ recipientName, message, recipientImage, onClose }:
               >
                 {bodyText}
               </p>
+              
+              <div className="mt-8 text-right w-full pr-4 opacity-0" style={{ animation: "fadeIn 1s forwards 3s" }}>
+                <p className="font-serif text-lg text-rose-500 font-semibold" style={{ fontFamily: "'Dancing Script', cursive, serif", fontSize: "24px" }}>
+                  Từ: {senderName}
+                </p>
+              </div>
 
               {/* Heart animation gif */}
               <div className="mt-4" style={{ width: 120 }}>

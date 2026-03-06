@@ -13,10 +13,10 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "WishLink 8/3 — Tạo thiệp chúc mừng 8/3 ✿",
+  title: "NirussVn0 Dev — Tạo thiệp chúc mừng 8/3 ✿",
   description: "Tạo thiệp chúc mừng ngày Quốc tế Phụ nữ 8/3 đẹp mắt, gửi bất ngờ cho người đặc biệt!",
   openGraph: {
-    title: "WishLink 8/3 ✿",
+    title: "NirussVn0 Dev ✿",
     description: "Ai đó đã gửi cho bạn một món quà bất ngờ ngày 8/3!",
   },
 }

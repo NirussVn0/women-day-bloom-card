@@ -68,7 +68,7 @@ export function MusicToggle({ src }: { src?: string }) {
           toggle()
         }}
         style={{ opacity: 0 }}
-        className="fixed top-4 right-4 z-50 w-11 h-11 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 shadow-lg flex items-center justify-center transition-all hover:bg-rose-50 hover:scale-110 cursor-pointer"
+        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 w-11 h-11 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 shadow-lg flex items-center justify-center transition-all hover:bg-rose-50 hover:scale-110 cursor-pointer"
         aria-label={playing ? "Tắt nhạc" : "Bật nhạc"}
       >
         {playing ? (

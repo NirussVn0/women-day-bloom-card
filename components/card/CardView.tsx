@@ -7,6 +7,7 @@ import { EnvelopeLetter } from "./EnvelopeLetter"
 import { DodgeButton } from "./DodgeButton"
 import { MessageReveal } from "./MessageReveal"
 import { MusicToggle } from "./MusicToggle"
+import { BrandWatermark } from "@/components/BrandWatermark"
 import { RoseGift } from "@/components/effects/RoseGift"
 import { PetalRain } from "@/components/effects/PetalRain"
 import { RoseDrawing } from "./RoseDrawing"
@@ -25,9 +26,10 @@ interface CardViewProps {
   message: string
   theme?: string
   recipientImage?: string
+  senderName: string
 }
 
-export function CardView({ recipientName, message, theme = "catch-me", recipientImage }: CardViewProps) {
+export function CardView({ recipientName, message, theme = "catch-me", recipientImage, senderName }: CardViewProps) {
   /* ─── Theme A state ─── */
   const [catchStage, setCatchStage] = useState<CatchMeStage>("meme")
   /* ─── Theme B state ─── */
@@ -52,8 +54,13 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
 
   const isLoveLetter = theme === "love-letter"
 
+  const showWatermark = true
+
   return (
     <div className="min-h-screen relative overflow-hidden">
+      {/* Brand watermark badge at top right */}
+      <BrandWatermark show={showWatermark} />
+
       {/* Music toggle — always visible */}
       <MusicToggle />
 
@@ -148,7 +155,7 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
           )}
           {catchStage === "reveal" && (
             <div ref={stageRef} style={{ opacity: 0 }}>
-              <MessageReveal recipientName={recipientName} message={message} />
+              <MessageReveal recipientName={recipientName} message={message} senderName={senderName} />
             </div>
           )}
         </>
@@ -183,6 +190,7 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
                 recipientName={recipientName}
                 message={message}
                 recipientImage={recipientImage}
+                senderName={senderName}
                 onClose={() => setLetterStage("envelopeScene")}
               />
             </div>

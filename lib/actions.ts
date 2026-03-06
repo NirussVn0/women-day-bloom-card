@@ -2,14 +2,15 @@
 
 import { saveCard, getCard, type CardData } from "@/lib/store"
 
-export async function createCard(formData: {
-  recipientName: string
-  message: string
-  theme: string
+export async function createCard(
+  senderName: string,
+  recipientName: string,
+  message: string,
+  theme?: string,
   recipientImage?: string
-}): Promise<{ id: string }> {
-  const card = saveCard(formData)
-  return { id: card.id }
+): Promise<string> {
+  const id = await saveCard(senderName, recipientName, message, theme, recipientImage)
+  return id
 }
 
 export async function fetchCard(id: string): Promise<CardData | null> {

@@ -9,9 +9,10 @@ import { PiHeartFill } from "react-icons/pi"
 interface MessageRevealProps {
   recipientName: string
   message: string
+  senderName: string
 }
 
-export function MessageReveal({ recipientName, message }: MessageRevealProps) {
+export function MessageReveal({ recipientName, message, senderName }: MessageRevealProps) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -105,10 +106,15 @@ export function MessageReveal({ recipientName, message }: MessageRevealProps) {
           <p className="text-xl sm:text-2xl text-stone-700 leading-relaxed font-serif whitespace-pre-wrap">
             {message}
           </p>
+          <div className="mt-6 text-right w-full pt-4 border-t border-rose-100/50">
+            <p className="font-serif text-lg text-rose-500 font-semibold italic">
+              Từ: {senderName}
+            </p>
+          </div>
         </div>
 
         <p className="reveal-footer mt-8 text-sm text-stone-400 flex items-center justify-center gap-1.5" style={{ opacity: 0 }}>
-          Made with <PiHeartFill className="w-3.5 h-3.5 text-rose-400" /> on WishLink 8/3
+          Made with <PiHeartFill className="w-3.5 h-3.5 text-rose-400" /> on NirussVn0 Dev
         </p>
       </div>
     </div>
