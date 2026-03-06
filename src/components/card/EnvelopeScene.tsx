@@ -159,7 +159,7 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         ref={svgRef}
         className="svg-heart-ring absolute"
         viewBox="-130 -40 260 200"
-        style={{ width: "110%", maxWidth: 900, zIndex: 1 }}
+        style={{ width: "min(150vw, 900px)", minWidth: "550px", zIndex: 1 }}
       >
         <defs>
           <path
@@ -255,9 +255,11 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         }} />
       </div>
 
-      <p className="text-rose-400 text-sm mt-4 relative z-10 animate-bounce" style={{ fontFamily: "var(--font-cursive), 'Dancing Script', cursive" }}>
-        🌹 Chạm vào phong bì để đọc thư... 🌹
-      </p>
+      <div className="absolute bottom-12 w-full flex justify-center z-50 pointer-events-none">
+        <p className="text-rose-600 text-lg sm:text-xl font-bold animate-bounce px-6 py-3 bg-white/70 backdrop-blur-md rounded-full shadow-lg shadow-rose-200" style={{ fontFamily: "var(--font-cursive), 'Dancing Script', cursive" }}>
+          🌹 Chạm vào phong bì để đọc thư... 🌹
+        </p>
+      </div>
     </div>
   )
 }
