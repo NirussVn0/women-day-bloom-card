@@ -58,6 +58,13 @@ export function MusicToggle({ src }: { src?: string }) {
 
   const musicSrc = src || "/music.mp3"
 
+  // Set default volume
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.6
+    }
+  }, [])
+
   return (
     <>
       <audio ref={audioRef} src={musicSrc} loop preload="auto" />
