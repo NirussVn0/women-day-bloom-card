@@ -1,100 +1,140 @@
-# NirussVn0 Dev — Thiệp Chúc Mừng 8/3 ✿
+# 💐 NirussVn0 Dev — Thiệp 8/3
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-![Anime.js](https://img.shields.io/badge/Anime.js-4-ff6b6b)
+<div align="center">
 
-Ứng dụng web tạo thiệp chúc mừng Ngày Quốc tế Phụ nữ 8/3 với hiệu ứng đẹp mắt, hoa rơi, nhạc nền và mã QR trái tim.
+![NirussVn0 Dev](https://img.shields.io/badge/NirussVn0_Dev-Thiệp_8/3-FF6B81?style=for-the-badge&logo=heart&logoColor=white)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Anime.js](https://img.shields.io/badge/Anime.js-4-FF6B6B?style=for-the-badge)](https://animejs.com/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
 
-> **Author**: [NirussVn0](https://sabicoder.xyz)
+**Tạo thiệp chúc mừng Ngày Phụ nữ 8/3 với hiệu ứng đẹp mắt** 🌹
+
+Hoa rơi · Phong bì bay · Nhạc nền · Mã QR trái tim · Typewriter text
+Developed by **[NirussVn0](https://sabicoder.xyz)**.
+
+[Tính năng](#-tính-năng) • [Cài đặt](#-cài-đặt) • [Cấu trúc](#-cấu-trúc-project) • [Đóng góp](#-đóng-góp) • [English](./README_EN.md)
+
+</div>
 
 ---
 
 ## ✨ Tính Năng
 
-| # | Tính năng | Mô tả |
-|---|-----------|-------|
-| 1 | **2 Theme** | "Catch Me 🌸" (nút chạy trốn) & "Thư Tình 💌" (phong bì vintage) |
-| 2 | **Anime.js** | Hoa rơi, hoa hồng nở, phong bì bay, confetti |
-| 3 | **Nhạc nền** | Auto-play + nút bật/tắt luôn hiển thị |
-| 4 | **Upload ảnh** | Ảnh hiển thị trong thư (max 500KB) |
-| 5 | **QR trái tim** | Canvas heart với QR code bên trong |
-| 6 | **Tên người gửi** | URL: `/card/ten-nguoi-gui-randomId` |
-| 7 | **Link 10 ngày** | Tự cleanup hết hạn |
-| 8 | **Watermark** | "Điều bất ngờ bởi NirussVn0" → sabicoder.xyz |
+### 🌸 2 Theme Thiệp
+* **Catch Me**: Nút "Không" chạy trốn → hoa hồng nở → tin nhắn + confetti
+* **Thư Tình**: Hoa hồng vẽ SVG → phong bì trái tim → thư tay typewriter
+
+### 🎨 Hiệu Ứng
+* Cánh hoa rơi (PetalRain) bằng Anime.js
+* Phong bì bay lên xuống với trái tim CSS `::before/::after`
+* SVG heart text path vẽ dần + quay
+* Hoa hồng SVG stroke-draw animation
+* Confetti celebration
+
+### 📱 Tính Năng Khác
+* **Nhạc nền**: Auto-play + nút bật/tắt luôn hiển thị
+* **Upload ảnh**: Ảnh người nhận hiển thị trong thư (max 500KB)
+* **QR trái tim**: Canvas heart-shaped với mã QR bên trong, tải về gửi
+* **Tên người gửi**: URL dạng `/card/ten-nguoi-gui-randomId`
+* **Link hết hạn**: Tự động xoá sau 10 ngày
+* **Watermark**: "Điều bất ngờ bởi NirussVn0" → sabicoder.xyz
+* **Mobile responsive**: Hiển thị đẹp trên mọi thiết bị
 
 ---
 
-## 🏗️ Kiến Trúc
+## 🚀 Cài Đặt
 
-```
-app/
-├── layout.tsx                # Root layout + fonts (Inter, Playfair, Dancing Script)
-├── page.tsx                  # Trang tạo thiệp
-└── card/[id]/page.tsx        # Trang xem thiệp
+1. **Clone** repository:
+   ```bash
+   git clone https://github.com/NirussVn0/women-day-bloom-card.git
+   cd women-day-bloom-card
+   ```
 
-components/
-├── BrandWatermark.tsx        # Badge → sabicoder.xyz
-├── card/
-│   ├── CardView.tsx          # Router 2 themes
-│   ├── CreatorForm.tsx       # Form tạo thiệp + HeartQR
-│   ├── MemeOpening.tsx       # Mở đầu meme (chung)
-│   ├── EnvelopeLetter.tsx    # Theme A: phong bì
-│   ├── DodgeButton.tsx       # Theme A: nút chạy trốn
-│   ├── MessageReveal.tsx     # Theme A: tin nhắn + confetti
-│   ├── RoseDrawing.tsx       # Theme B: SVG hoa hồng
-│   ├── EnvelopeScene.tsx     # Theme B: phong bì + trái tim CSS
-│   ├── LetterModal.tsx       # Theme B: thư tay (600x350px per reference)
-│   ├── HeartQR.tsx           # Canvas QR trái tim
-│   └── MusicToggle.tsx       # Bật/tắt nhạc
-└── effects/
-    ├── PetalRain.tsx         # Cánh hoa rơi
-    └── RoseGift.tsx          # Hoa hồng nở
+2. **Cài dependencies**:
+   ```bash
+   npm install
+   ```
 
-lib/
-├── store.ts                  # In-memory store + expiry + slug
-└── actions.ts                # Server actions
-```
+3. **Chạy dev server**:
+   ```bash
+   npm run dev
+   ```
 
----
+4. **Mở trình duyệt**: [http://localhost:3000](http://localhost:3000)
 
-## 🧱 Design Principles
-
-- **SRP**: Mỗi component 1 trách nhiệm (`HeartDecor`, `GiftSection`, `LetterTextContent`)
-- **OCP**: Dễ thêm theme mới qua CardView state machine
-- **DRY**: `PetalRain`, `BrandWatermark` tái sử dụng xuyên suốt
-- **Type Safety**: TypeScript strict, interface cho tất cả props
-
----
-
-## 🚀 Getting Started
+### Build Production
 
 ```bash
-npm install        # Cài dependencies
-npm run dev        # Chạy dev server → http://localhost:3000
-npx tsc --noEmit   # Type check
-npm run build      # Build production
+npm run build
+npm start
 ```
-
-### Thay đổi nội dung thiệp
-
-1. Mở `http://localhost:3000`
-2. Chọn theme, nhập tên người nhận, tin nhắn, tên người gửi
-3. (Tùy chọn) Upload ảnh người nhận (max 500KB)
-4. Nhấn "Tạo thiệp" → lấy link gửi
-5. Tải QR trái tim để gửi qua tin nhắn
 
 ### Thêm nhạc nền
 
-Copy file `.mp3` vào thư mục `public/` và đặt tên `music.mp3`.
+Copy file `.mp3` vào `public/music.mp3`.
 
 ---
 
-## 📦 Tech Stack
+## 📁 Cấu Trúc Project
 
-| Layer | Tech |
-|-------|------|
-| Framework | Next.js 15 (App Router) |
+```
+women-day-bloom-card/
+├── app/                        # Next.js App Router
+│   ├── layout.tsx              # Root layout + fonts
+│   ├── page.tsx                # Trang tạo thiệp
+│   ├── globals.css             # Design tokens + CSS
+│   └── card/[id]/page.tsx      # Trang xem thiệp
+│
+├── components/                 # React Components
+│   ├── BrandWatermark.tsx      # Badge thương hiệu
+│   ├── card/
+│   │   ├── CardView.tsx        # State machine 2 themes
+│   │   ├── CreatorForm.tsx     # Form tạo thiệp + QR
+│   │   ├── MemeOpening.tsx     # Mở đầu meme (chung)
+│   │   ├── EnvelopeLetter.tsx  # Theme A: phong bì mở
+│   │   ├── DodgeButton.tsx     # Theme A: nút chạy trốn
+│   │   ├── MessageReveal.tsx   # Theme A: tin nhắn reveal
+│   │   ├── RoseDrawing.tsx     # Theme B: SVG hoa hồng
+│   │   ├── EnvelopeScene.tsx   # Theme B: phong bì + hearts
+│   │   ├── LetterModal.tsx     # Theme B: thư tay modal
+│   │   ├── HeartQR.tsx         # Canvas QR trái tim
+│   │   └── MusicToggle.tsx     # Nút nhạc
+│   └── effects/
+│       ├── PetalRain.tsx       # Hiệu ứng hoa rơi
+│       └── RoseGift.tsx        # Hiệu ứng hoa nở
+│
+├── lib/                        # Business Logic
+│   ├── store.ts                # In-memory store + expiry
+│   └── actions.ts              # Server actions
+│
+├── public/                     # Static assets
+│   ├── ref/                    # Ảnh giftbox, mewmew, hearts
+│   ├── cute.jpeg               # Ảnh meme opening
+│   └── music.mp3               # Nhạc nền (tự thêm)
+│
+└── reference_8_3/              # Code HTML tham khảo gốc
+```
+
+---
+
+## 🧱 Nguyên Tắc Thiết Kế
+
+| Nguyên tắc | Mô tả |
+|------------|-------|
+| **SRP** | Mỗi component chịu 1 trách nhiệm duy nhất |
+| **OCP** | Dễ thêm theme mới qua CardView state machine |
+| **DRY** | Components dùng chung: PetalRain, BrandWatermark |
+| **Type Safety** | TypeScript strict, interface cho tất cả props |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Công nghệ |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript 5 |
 | Styling | Tailwind CSS 4 |
 | Animations | Anime.js 4 |
@@ -104,6 +144,18 @@ Copy file `.mp3` vào thư mục `public/` và đặt tên `music.mp3`.
 
 ---
 
+## 🤝 Đóng Góp
+
+1. Fork repository
+2. Tạo branch: `git checkout -b feature/ten-tinh-nang`
+3. Commit: `git commit -m "feat: mô tả"`
+4. Push: `git push origin feature/ten-tinh-nang`
+5. Mở Pull Request
+
+---
+
 ## 📄 License
 
-Made with ❤️ by [NirussVn0](https://sabicoder.xyz)
+Distributed under the MIT License.
+
+Copyright © 2026 **[NirussVn0](https://sabicoder.xyz)**.

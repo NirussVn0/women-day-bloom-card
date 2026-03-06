@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${inter.variable} ${playfair.variable} ${dancingScript.variable}`}>
+    <html lang="vi" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${dancingScript.variable}`}>
       <body className="min-h-screen antialiased">
         {children}
       </body>
