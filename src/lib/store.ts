@@ -1,5 +1,10 @@
-import { nanoid } from "nanoid"
+"use server"
 
+import { kv } from "@vercel/kv"
+
+/* ══════════════════════════════════════════════════════════════
+   CardData — Schema for a greeting card
+   ══════════════════════════════════════════════════════════════ */
 export interface CardData {
   id: string
   senderName: string
@@ -12,38 +17,44 @@ export interface CardData {
   expiresAt: number
 }
 
-// Persist across HMR in development via globalThis
-const globalForCards = globalThis as unknown as {
-  __cards?: Map<string, CardData>
-}
-
-if (!globalForCards.__cards) {
-  globalForCards.__cards = new Map<string, CardData>()
-}
-
-const cards = globalForCards.__cards
-
+/* ══════════════════════════════════════════════════════════════
+   Constants
+   ══════════════════════════════════════════════════════════════ */
 const EXPIRY_DAYS = 10
-const MS_PER_DAY = 24 * 60 * 60 * 1000
+const EXPIRY_SECONDS = EXPIRY_DAYS * 24 * 60 * 60
+const CARD_PREFIX = "card:"
 
+/* ══════════════════════════════════════════════════════════════
+   In-Memory Fallback — Used when KV env vars are not set (local dev)
+   ══════════════════════════════════════════════════════════════ */
+const globalForCards = globalThis as unknown as { __cards?: Map<string, CardData> }
+if (!globalForCards.__cards) globalForCards.__cards = new Map<string, CardData>()
+const memoryStore = globalForCards.__cards
+
+function isKvAvailable(): boolean {
+  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ID Generation — slug from sender name + random suffix
+   ══════════════════════════════════════════════════════════════ */
 function generateSlugId(senderName: string): string {
   const slug = senderName
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // remove accents
-    .replace(/[^a-z0-9]+/g, "-") // replace non-alphanumeric with dash
-    .replace(/^-+|-+$/g, "") // trim dashes
-    .substring(0, 20) // max length for name part
-  
-  const randomPart = Math.random().toString(36).substring(2, 7) // 5 random chars
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .substring(0, 20)
+
+  const randomPart = Math.random().toString(36).substring(2, 7)
   return slug ? `${slug}-${randomPart}` : randomPart
 }
 
-// Helper to get the card store (using the global 'cards' map for now)
-function getStore(): Map<string, CardData> {
-  return cards;
-}
-
+/* ══════════════════════════════════════════════════════════════
+   saveCard — Persist card to KV (production) or memory (dev)
+   Redis key: "card:{id}", TTL: 10 days auto-expire
+   ══════════════════════════════════════════════════════════════ */
 export async function saveCard(
   senderName: string,
   recipientName: string,
@@ -52,42 +63,49 @@ export async function saveCard(
   recipientImage?: string,
   customMusic?: string
 ): Promise<string> {
-  const store = getStore()
+  const id = generateSlugId(senderName)
   const now = Date.now()
-  
-  // Clean up expired cards periodically
-  for (const [key, card] of store.entries()) {
-    if (card.expiresAt < now) {
-      store.delete(key)
+  const expiresAt = now + EXPIRY_SECONDS * 1000
+
+  const card: CardData = {
+    id, senderName, recipientName, message,
+    theme, recipientImage, customMusic,
+    createdAt: now, expiresAt,
+  }
+
+  if (isKvAvailable()) {
+    // Production: Store in Vercel KV with auto-expire TTL
+    await kv.set(`${CARD_PREFIX}${id}`, JSON.stringify(card), { ex: EXPIRY_SECONDS })
+  } else {
+    // Dev fallback: in-memory Map
+    memoryStore.set(id, card)
+    // Clean up expired
+    for (const [key, c] of memoryStore.entries()) {
+      if (c.expiresAt < now) memoryStore.delete(key)
     }
   }
 
-  const id = generateSlugId(senderName)
-  const expiresAt = now + (EXPIRY_DAYS * MS_PER_DAY)
-
-  store.set(id, { 
-    id, 
-    senderName, 
-    recipientName, 
-    message, 
-    theme, 
-    recipientImage,
-    customMusic,
-    createdAt: now,
-    expiresAt
-  })
   return id
 }
 
+/* ══════════════════════════════════════════════════════════════
+   getCard — Read card from KV or memory
+   ══════════════════════════════════════════════════════════════ */
 export async function getCard(id: string): Promise<CardData | null> {
-  const store = getStore()
-  const card = store.get(id) || null
-  
-  // Check expiry on read as well
-  if (card && card.expiresAt < Date.now()) {
-    store.delete(id)
-    return null
+  if (isKvAvailable()) {
+    // Production: read from KV (expired keys auto-deleted by Redis TTL)
+    const raw = await kv.get<string>(`${CARD_PREFIX}${id}`)
+    if (!raw) return null
+    // kv.get may return already-parsed object or string
+    const card: CardData = typeof raw === "string" ? JSON.parse(raw) : raw
+    return card
+  } else {
+    // Dev fallback
+    const card = memoryStore.get(id) || null
+    if (card && card.expiresAt < Date.now()) {
+      memoryStore.delete(id)
+      return null
+    }
+    return card
   }
-  
-  return card
 }

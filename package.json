@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/qrcode": "^1.5.6",
+    "@vercel/kv": "^3.0.0",
     "animejs": "^4.3.6",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
