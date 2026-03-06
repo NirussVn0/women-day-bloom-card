@@ -5,6 +5,7 @@ export interface CardData {
   recipientName: string
   message: string
   theme: string
+  recipientImage?: string
   createdAt: string
 }
 

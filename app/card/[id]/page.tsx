@@ -29,5 +29,12 @@ export default async function CardPage({ params }: Props) {
     notFound()
   }
 
-  return <CardView recipientName={card.recipientName} message={card.message} />
+  return (
+    <CardView
+      recipientName={card.recipientName}
+      message={card.message}
+      theme={card.theme}
+      recipientImage={card.recipientImage}
+    />
+  )
 }

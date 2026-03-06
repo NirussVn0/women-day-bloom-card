@@ -1,23 +1,29 @@
 "use client"
 
-import { useState, useTransition, useRef, useEffect } from "react"
+import { useState, useTransition, useRef, useEffect, useCallback } from "react"
 import { createCard } from "@/lib/actions"
 import { animate } from "animejs"
-import { PiArrowRightBold, PiCopyBold, PiCheckBold, PiSparkle, PiFlowerTulipFill } from "react-icons/pi"
+import {
+  PiArrowRightBold, PiCopyBold, PiCheckBold, PiSparkle,
+  PiFlowerTulipFill, PiEnvelopeSimpleFill, PiImageBold, PiXBold
+} from "react-icons/pi"
 
 const THEMES = [
-  { id: "catch-me", label: "Catch Me", desc: 'Nút "Không" chạy trốn — buộc phải bấm "Có"!', icon: PiFlowerTulipFill },
+  { id: "catch-me", label: "Catch Me 🌸", desc: 'Nút "Không" chạy trốn — buộc phải bấm "Có"!', icon: PiFlowerTulipFill },
+  { id: "love-letter", label: "Thư Tình 💌", desc: "Phong bì + hoa hồng vẽ nét + thư tay kiểu vintage", icon: PiEnvelopeSimpleFill },
 ]
 
 export function CreatorForm() {
   const [recipientName, setRecipientName] = useState("")
   const [message, setMessage] = useState("")
   const [theme, setTheme] = useState("catch-me")
+  const [recipientImage, setRecipientImage] = useState<string | undefined>()
   const [result, setResult] = useState<{ id: string } | null>(null)
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
   const resultRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Entrance animation
   useEffect(() => {
@@ -45,12 +51,27 @@ export function CreatorForm() {
     }
   }, [result])
 
+  const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    // Max 500KB to keep in-memory store reasonable
+    if (file.size > 512000) {
+      alert("Ảnh quá lớn, vui lòng chọn ảnh dưới 500KB")
+      return
+    }
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setRecipientImage(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!recipientName.trim() || !message.trim()) return
 
     startTransition(async () => {
-      const res = await createCard({ recipientName, message, theme })
+      const res = await createCard({ recipientName, message, theme, recipientImage })
       setResult(res)
     })
   }
@@ -92,7 +113,7 @@ export function CreatorForm() {
           </div>
         </div>
         <button
-          onClick={() => { setResult(null); setRecipientName(""); setMessage("") }}
+          onClick={() => { setResult(null); setRecipientName(""); setMessage(""); setRecipientImage(undefined) }}
           className="text-sm text-stone-500 hover:text-stone-700 underline underline-offset-4 transition-colors"
         >
           ← Tạo thiệp khác
@@ -135,6 +156,41 @@ export function CreatorForm() {
         />
       </div>
 
+      {/* Image upload */}
+      <div className="space-y-2 form-field" style={{ opacity: 0 }}>
+        <label className="block text-sm font-medium text-stone-600">
+          Ảnh người nhận (tuỳ chọn)
+        </label>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+        />
+        {recipientImage ? (
+          <div className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-rose-300 shadow-sm">
+            <img src={recipientImage} alt="Preview" className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => { setRecipientImage(undefined); if (fileInputRef.current) fileInputRef.current.value = "" }}
+              className="absolute top-1 right-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 cursor-pointer"
+            >
+              <PiXBold className="w-3 h-3" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-dashed border-stone-200 bg-white text-stone-500 hover:border-rose-300 hover:text-rose-500 transition-all cursor-pointer w-full justify-center"
+          >
+            <PiImageBold className="w-5 h-5" />
+            Thêm ảnh
+          </button>
+        )}
+      </div>
+
       <div className="space-y-2 form-field" style={{ opacity: 0 }}>
         <label className="block text-sm font-medium text-stone-600">
           Hiệu ứng
@@ -147,7 +203,7 @@ export function CreatorForm() {
                 key={t.id}
                 type="button"
                 onClick={() => setTheme(t.id)}
-                className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 ${
+                className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 cursor-pointer ${
                   theme === t.id
                     ? "border-rose-400 bg-rose-50 shadow-sm"
                     : "border-stone-200 bg-white hover:border-stone-300"

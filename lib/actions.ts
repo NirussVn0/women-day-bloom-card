@@ -6,6 +6,7 @@ export async function createCard(formData: {
   recipientName: string
   message: string
   theme: string
+  recipientImage?: string
 }): Promise<{ id: string }> {
   const card = saveCard(formData)
   return { id: card.id }
