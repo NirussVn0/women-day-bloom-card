@@ -1,63 +1,21 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useEffect, useMemo } from "react"
+import { useEffect, useRef } from "react"
+import { animate, createTimeline } from "animejs"
 import confetti from "canvas-confetti"
+import { PetalRain } from "@/components/effects/PetalRain"
+import { PiHeartFill } from "react-icons/pi"
 
 interface MessageRevealProps {
   recipientName: string
   message: string
 }
 
-function PetalParticle({ index }: { index: number }) {
-  const style = useMemo(() => ({
-    left: `${Math.random() * 100}%`,
-    animationDuration: `${6 + Math.random() * 8}s`,
-    animationDelay: `${Math.random() * 5}s`,
-    fontSize: `${14 + Math.random() * 14}px`,
-    opacity: 0.6 + Math.random() * 0.4,
-  }), [])
-
-  const petals = ["🌸", "🩷", "✿", "❀", "🌺", "💮"]
-
-  return (
-    <span
-      className="petal"
-      style={style}
-    >
-      {petals[index % petals.length]}
-    </span>
-  )
-}
-
 export function MessageReveal({ recipientName, message }: MessageRevealProps) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
-    // Fire confetti bursts
-    const duration = 3000
-    const end = Date.now() + duration
-
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0, y: 0.7 },
-        colors: ["#fb7185", "#fda4af", "#fecdd3", "#fcd19e", "#fef3e2"],
-      })
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1, y: 0.7 },
-        colors: ["#fb7185", "#fda4af", "#fecdd3", "#fcd19e", "#fef3e2"],
-      })
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame)
-      }
-    }
-
-    // Initial big burst
+    // Fire confetti
     confetti({
       particleCount: 100,
       spread: 100,
@@ -65,73 +23,94 @@ export function MessageReveal({ recipientName, message }: MessageRevealProps) {
       colors: ["#fb7185", "#fda4af", "#fecdd3", "#fcd19e", "#fef3e2"],
     })
 
+    const duration = 3000
+    const end = Date.now() + duration
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors: ["#fb7185", "#fda4af", "#fecdd3"],
+      })
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors: ["#fb7185", "#fda4af", "#fecdd3"],
+      })
+      if (Date.now() < end) requestAnimationFrame(frame)
+    }
     requestAnimationFrame(frame)
+
+    // Anime.js reveal timeline
+    if (!rootRef.current) return
+
+    const tl = createTimeline()
+
+    tl.add(".reveal-subtitle", {
+      opacity: [0, 1],
+      translateY: [15, 0],
+      duration: 600,
+      ease: "out(4)",
+    }, 500)
+
+    tl.add(".reveal-heading", {
+      opacity: [0, 1],
+      translateY: [25, 0],
+      duration: 800,
+      ease: "out(4)",
+    }, 800)
+
+    tl.add(".reveal-card", {
+      opacity: [0, 1],
+      translateY: [30, 0],
+      scale: [0.96, 1],
+      duration: 800,
+      ease: "out(4)",
+    }, 1200)
+
+    tl.add(".reveal-footer", {
+      opacity: [0, 1],
+      duration: 600,
+      ease: "out(3)",
+    }, 2000)
+
   }, [])
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Floating Petals */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <PetalParticle key={i} index={i} />
-      ))}
+    <div ref={rootRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      <PetalRain />
 
       {/* Ambient Glows */}
       <div className="glow-orb w-80 h-80 bg-rose-200 top-[10%] left-[5%]" />
-      <div className="glow-orb w-64 h-64 bg-peach-200 bottom-[10%] right-[5%]" style={{ animationDelay: "2s" }} />
+      <div className="glow-orb w-64 h-64 bg-orange-100 bottom-[10%] right-[5%]" style={{ animationDelay: "2s" }} />
 
-      {/* Content */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="relative z-10 text-center max-w-2xl mx-auto"
-      >
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-rose-400 font-medium mb-3 text-sm tracking-widest uppercase"
-        >
+      <div className="relative z-10 text-center max-w-2xl mx-auto">
+        <p className="reveal-subtitle text-rose-400 font-medium mb-3 text-sm tracking-widest uppercase" style={{ opacity: 0 }}>
           Happy Women&apos;s Day
-        </motion.p>
+        </p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-stone-900 mb-6 leading-tight"
-        >
+        <h1 className="reveal-heading text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-stone-900 mb-6 leading-tight" style={{ opacity: 0 }}>
           Gửi{" "}
           <span className="bg-gradient-to-r from-rose-500 to-rose-600 bg-clip-text text-transparent">
             {recipientName}
-          </span>{" "}
-          💐
-        </motion.h1>
+          </span>
+        </h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="bg-white/70 backdrop-blur-sm p-8 sm:p-10 rounded-2xl shadow-lg border border-rose-100 relative"
-        >
-          {/* Decorative corners */}
-          <span className="absolute top-3 left-4 text-rose-300 text-2xl select-none">❝</span>
-          <span className="absolute bottom-3 right-4 text-rose-300 text-2xl select-none">❞</span>
-
+        <div className="reveal-card bg-white/70 backdrop-blur-sm p-8 sm:p-10 rounded-2xl shadow-lg border border-rose-100 relative" style={{ opacity: 0 }}>
+          <span className="absolute top-3 left-4 text-rose-300 text-2xl select-none">&ldquo;</span>
+          <span className="absolute bottom-3 right-4 text-rose-300 text-2xl select-none">&rdquo;</span>
           <p className="text-xl sm:text-2xl text-stone-700 leading-relaxed font-serif whitespace-pre-wrap">
             {message}
           </p>
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5 }}
-          className="mt-8 text-sm text-stone-400 font-serif"
-        >
-          Made with <span className="text-rose-400">♥</span> on WishLink 8/3
-        </motion.p>
-      </motion.div>
+        <p className="reveal-footer mt-8 text-sm text-stone-400 flex items-center justify-center gap-1.5" style={{ opacity: 0 }}>
+          Made with <PiHeartFill className="w-3.5 h-3.5 text-rose-400" /> on WishLink 8/3
+        </p>
+      </div>
     </div>
   )
 }

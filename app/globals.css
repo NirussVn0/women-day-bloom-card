@@ -41,34 +41,10 @@ h1, h2, h3 {
   letter-spacing: -0.02em;
 }
 
-/* ---- Petal Animation ---- */
-@keyframes petal-fall {
-  0% {
-    opacity: 1;
-    transform: translateY(-10vh) rotate(0deg) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(110vh) rotate(720deg) scale(0.5);
-  }
-}
-
-@keyframes petal-sway {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(30px); }
-  75% { transform: translateX(-30px); }
-}
-
+/* ---- Ambient Glows (CSS-only, anime.js handles the rest) ---- */
 @keyframes float-glow {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.2); }
-}
-
-.petal {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  animation: petal-fall linear forwards, petal-sway ease-in-out infinite;
 }
 
 .glow-orb {

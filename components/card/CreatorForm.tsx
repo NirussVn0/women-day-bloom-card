@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useRef, useEffect } from "react"
 import { createCard } from "@/lib/actions"
-import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Copy, Check, Sparkles } from "lucide-react"
+import { animate } from "animejs"
+import { PiArrowRightBold, PiCopyBold, PiCheckBold, PiSparkle, PiFlowerTulipFill } from "react-icons/pi"
 
 const THEMES = [
-  { id: "catch-me", label: "🎯 Catch Me", desc: "Nút \"Không\" chạy trốn — buộc phải bấm \"Có\"!" },
+  { id: "catch-me", label: "Catch Me", desc: 'Nút "Không" chạy trốn — buộc phải bấm "Có"!', icon: PiFlowerTulipFill },
 ]
 
 export function CreatorForm() {
@@ -16,6 +16,34 @@ export function CreatorForm() {
   const [result, setResult] = useState<{ id: string } | null>(null)
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const formRef = useRef<HTMLFormElement>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
+
+  // Entrance animation
+  useEffect(() => {
+    if (formRef.current) {
+      const fields = formRef.current.querySelectorAll(".form-field")
+      animate(fields, {
+        opacity: [0, 1],
+        translateY: [24, 0],
+        delay: (_el: any, i: number) => i * 120,
+        duration: 600,
+        ease: "out(4)",
+      })
+    }
+  }, [])
+
+  // Result card entrance
+  useEffect(() => {
+    if (result && resultRef.current) {
+      animate(resultRef.current, {
+        opacity: [0, 1],
+        scale: [0.92, 1],
+        duration: 600,
+        ease: "out(4)",
+      })
+    }
+  }, [result])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,7 +55,7 @@ export function CreatorForm() {
     })
   }
 
-  const shareUrl = result ? `${window.location.origin}/card/${result.id}` : ""
+  const shareUrl = result ? `${typeof window !== "undefined" ? window.location.origin : ""}/card/${result.id}` : ""
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl)
@@ -35,136 +63,126 @@ export function CreatorForm() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  return (
-    <AnimatePresence mode="wait">
-      {!result ? (
-        <motion.form
-          key="form"
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-lg mx-auto space-y-6"
-        >
-          {/* Recipient Name */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-stone-600">
-              Tên người nhận ✿
-            </label>
+  if (result) {
+    return (
+      <div ref={resultRef} className="w-full max-w-lg mx-auto text-center space-y-6" style={{ opacity: 0 }}>
+        <div className="p-8 bg-white rounded-2xl shadow-lg border border-stone-100">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-rose-100 to-orange-100 flex items-center justify-center">
+            <PiSparkle className="w-8 h-8 text-rose-500" />
+          </div>
+          <h3 className="text-2xl font-serif font-bold text-stone-900 mb-2">
+            Thiệp đã sẵn sàng!
+          </h3>
+          <p className="text-stone-500 mb-6">
+            Gửi link này cho <strong className="text-rose-500">{recipientName}</strong> để xem bất ngờ!
+          </p>
+          <div className="flex items-center gap-2 p-3 bg-stone-50 rounded-xl border border-stone-200">
             <input
-              type="text"
-              value={recipientName}
-              onChange={(e) => setRecipientName(e.target.value)}
-              placeholder="Chị / Mẹ / Bạn gái..."
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all text-base"
-              required
+              readOnly
+              value={shareUrl}
+              className="flex-1 bg-transparent text-sm text-stone-700 outline-none truncate"
             />
+            <button
+              onClick={handleCopy}
+              className="shrink-0 px-4 py-2 bg-stone-900 text-white rounded-lg text-sm font-medium hover:bg-stone-800 transition-colors flex items-center gap-1.5"
+            >
+              {copied ? <PiCheckBold className="w-4 h-4" /> : <PiCopyBold className="w-4 h-4" />}
+              {copied ? "Đã copy!" : "Copy"}
+            </button>
           </div>
+        </div>
+        <button
+          onClick={() => { setResult(null); setRecipientName(""); setMessage("") }}
+          className="text-sm text-stone-500 hover:text-stone-700 underline underline-offset-4 transition-colors"
+        >
+          ← Tạo thiệp khác
+        </button>
+      </div>
+    )
+  }
 
-          {/* Message */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-stone-600">
-              Lời chúc của bạn 💌
-            </label>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Chúc chị ngày 8/3 thật vui vẻ và hạnh phúc!..."
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all text-base resize-none"
-              required
-            />
-          </div>
+  return (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="w-full max-w-lg mx-auto space-y-6"
+    >
+      <div className="space-y-2 form-field" style={{ opacity: 0 }}>
+        <label className="block text-sm font-medium text-stone-600">
+          Tên người nhận
+        </label>
+        <input
+          type="text"
+          value={recipientName}
+          onChange={(e) => setRecipientName(e.target.value)}
+          placeholder="Chị / Mẹ / Bạn gái..."
+          className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all text-base"
+          required
+        />
+      </div>
 
-          {/* Theme Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-stone-600">
-              Hiệu ứng 🎬
-            </label>
-            <div className="grid gap-3">
-              {THEMES.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setTheme(t.id)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    theme === t.id
-                      ? "border-rose-400 bg-rose-50 shadow-sm"
-                      : "border-stone-200 bg-white hover:border-stone-300"
-                  }`}
-                >
+      <div className="space-y-2 form-field" style={{ opacity: 0 }}>
+        <label className="block text-sm font-medium text-stone-600">
+          Lời chúc của bạn
+        </label>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Chúc chị ngày 8/3 thật vui vẻ và hạnh phúc!..."
+          rows={4}
+          className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all text-base resize-none"
+          required
+        />
+      </div>
+
+      <div className="space-y-2 form-field" style={{ opacity: 0 }}>
+        <label className="block text-sm font-medium text-stone-600">
+          Hiệu ứng
+        </label>
+        <div className="grid gap-3">
+          {THEMES.map((t) => {
+            const Icon = t.icon
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTheme(t.id)}
+                className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 ${
+                  theme === t.id
+                    ? "border-rose-400 bg-rose-50 shadow-sm"
+                    : "border-stone-200 bg-white hover:border-stone-300"
+                }`}
+              >
+                <Icon className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
+                <div>
                   <p className="font-semibold text-stone-800">{t.label}</p>
                   <p className="text-sm text-stone-500 mt-0.5">{t.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Submit */}
-          <motion.button
-            type="submit"
-            disabled={isPending || !recipientName.trim() || !message.trim()}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-4 px-6 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
-          >
-            {isPending ? (
-              <span className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 animate-spin" />
-                Đang tạo...
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                Tạo link bất ngờ
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            )}
-          </motion.button>
-        </motion.form>
-      ) : (
-        <motion.div
-          key="result"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
-          className="w-full max-w-lg mx-auto text-center space-y-6"
-        >
-          <div className="p-8 bg-white rounded-2xl shadow-lg border border-stone-100">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-rose-100 to-peach-200 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-rose-500" />
-            </div>
-            <h3 className="text-2xl font-serif font-bold text-stone-900 mb-2">
-              Thiệp đã sẵn sàng! ✿
-            </h3>
-            <p className="text-stone-500 mb-6">
-              Gửi link này cho <strong className="text-rose-500">{recipientName}</strong> để xem bất ngờ!
-            </p>
-
-            <div className="flex items-center gap-2 p-3 bg-stone-50 rounded-xl border border-stone-200">
-              <input
-                readOnly
-                value={shareUrl}
-                className="flex-1 bg-transparent text-sm text-stone-700 outline-none truncate"
-              />
-              <button
-                onClick={handleCopy}
-                className="shrink-0 px-4 py-2 bg-stone-900 text-white rounded-lg text-sm font-medium hover:bg-stone-800 transition-colors flex items-center gap-1.5"
-              >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? "Đã copy!" : "Copy"}
+                </div>
               </button>
-            </div>
-          </div>
+            )
+          })}
+        </div>
+      </div>
 
-          <button
-            onClick={() => { setResult(null); setRecipientName(""); setMessage("") }}
-            className="text-sm text-stone-500 hover:text-stone-700 underline underline-offset-4 transition-colors"
-          >
-            ← Tạo thiệp khác
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <div className="form-field" style={{ opacity: 0 }}>
+        <button
+          type="submit"
+          disabled={isPending || !recipientName.trim() || !message.trim()}
+          className="w-full py-4 px-6 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base cursor-pointer"
+        >
+          {isPending ? (
+            <span className="flex items-center gap-2">
+              <PiSparkle className="w-5 h-5 animate-spin" />
+              Đang tạo...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              Tạo link bất ngờ
+              <PiArrowRightBold className="w-5 h-5" />
+            </span>
+          )}
+        </button>
+      </div>
+    </form>
   )
 }
