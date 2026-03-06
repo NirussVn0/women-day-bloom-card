@@ -2,13 +2,16 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { animate } from "animejs"
+import { MemeOpening } from "./MemeOpening"
+import { EnvelopeLetter } from "./EnvelopeLetter"
 import { DodgeButton } from "./DodgeButton"
 import { MessageReveal } from "./MessageReveal"
+import { MusicToggle } from "./MusicToggle"
 import { RoseGift } from "@/components/effects/RoseGift"
 import { PetalRain } from "@/components/effects/PetalRain"
 import { PiFlowerTulipFill, PiHeartFill, PiGiftFill, PiSparkle } from "react-icons/pi"
 
-type Stage = "question" | "dodging" | "rose" | "reveal"
+type Stage = "meme" | "envelope" | "question" | "dodging" | "rose" | "reveal"
 
 interface CardViewProps {
   recipientName: string
@@ -16,12 +19,12 @@ interface CardViewProps {
 }
 
 export function CardView({ recipientName, message }: CardViewProps) {
-  const [stage, setStage] = useState<Stage>("question")
+  const [stage, setStage] = useState<Stage>("meme")
   const stageRef = useRef<HTMLDivElement>(null)
 
   // Animate stage entrance
   useEffect(() => {
-    if (stageRef.current) {
+    if (stageRef.current && stage !== "meme" && stage !== "envelope") {
       animate(stageRef.current, {
         opacity: [0, 1],
         duration: 600,
@@ -36,7 +39,26 @@ export function CardView({ recipientName, message }: CardViewProps) {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Stage 1: The question */}
+      {/* Music toggle — always visible */}
+      <MusicToggle />
+
+      {/* Stage 0: Meme opening */}
+      {stage === "meme" && (
+        <MemeOpening
+          recipientName={recipientName}
+          onOpen={() => setStage("envelope")}
+        />
+      )}
+
+      {/* Stage 1: Envelope letter */}
+      {stage === "envelope" && (
+        <EnvelopeLetter
+          recipientName={recipientName}
+          onOpen={() => setStage("question")}
+        />
+      )}
+
+      {/* Stage 2: The question */}
       {stage === "question" && (
         <div
           ref={stageRef}
@@ -68,7 +90,7 @@ export function CardView({ recipientName, message }: CardViewProps) {
         </div>
       )}
 
-      {/* Stage 2: Dodge the NO button */}
+      {/* Stage 3: Dodge the NO button */}
       {stage === "dodging" && (
         <div
           ref={stageRef}
@@ -98,7 +120,7 @@ export function CardView({ recipientName, message }: CardViewProps) {
         </div>
       )}
 
-      {/* Stage 3: Rose bloom transition */}
+      {/* Stage 4: Rose bloom transition */}
       {stage === "rose" && (
         <div
           ref={stageRef}
@@ -113,7 +135,7 @@ export function CardView({ recipientName, message }: CardViewProps) {
         </div>
       )}
 
-      {/* Stage 4: Message Reveal */}
+      {/* Stage 5: Message Reveal */}
       {stage === "reveal" && (
         <div ref={stageRef} style={{ opacity: 0 }}>
           <MessageReveal recipientName={recipientName} message={message} />

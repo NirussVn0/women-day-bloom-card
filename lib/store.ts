@@ -8,9 +8,16 @@ export interface CardData {
   createdAt: string
 }
 
-// In-memory store — works for dev & demo.
-// Swap this for Vercel KV / Supabase in production.
-const cards = new Map<string, CardData>()
+// Persist across HMR in development via globalThis
+const globalForCards = globalThis as unknown as {
+  __cards?: Map<string, CardData>
+}
+
+if (!globalForCards.__cards) {
+  globalForCards.__cards = new Map<string, CardData>()
+}
+
+const cards = globalForCards.__cards
 
 export function saveCard(data: Omit<CardData, "id" | "createdAt">): CardData {
   const card: CardData = {
