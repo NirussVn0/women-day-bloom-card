@@ -12,7 +12,7 @@
 **Tạo thiệp chúc mừng Ngày Phụ nữ 8/3 với hiệu ứng đẹp mắt** 🌹
 
 Hoa rơi · Phong bì bay · Nhạc nền · Mã QR trái tim · Typewriter text
-Developed by **[NirussVn0](https://sabicoder.xyz)**.
+Developed by **[NirussVn0](https://github.com/NirussVn0)**.
 
 [Tính năng](#-tính-năng) • [Cài đặt](#-cài-đặt) • [Cấu trúc](#-cấu-trúc-project) • [Đóng góp](#-đóng-góp) • [English](./README_EN.md)
 
@@ -39,7 +39,7 @@ Developed by **[NirussVn0](https://sabicoder.xyz)**.
 * **QR trái tim**: Canvas heart-shaped với mã QR bên trong, tải về gửi
 * **Tên người gửi**: URL dạng `/card/ten-nguoi-gui-randomId`
 * **Link hết hạn**: Tự động xoá sau 10 ngày
-* **Watermark**: "Điều bất ngờ bởi NirussVn0" → sabicoder.xyz
+* **Watermark**: "Điều bất ngờ bởi NirussVn0" → github.com/NirussVn0
 * **Mobile responsive**: Hiển thị đẹp trên mọi thiết bị
 
 ---
@@ -159,4 +159,4 @@ women-day-bloom-card/
 
 Distributed under the MIT License.
 
-Copyright © 2026 **[NirussVn0](https://sabicoder.xyz)**.
+Copyright © 2026 **[NirussVn0](https://github.com/NirussVn0)**.

@@ -12,7 +12,7 @@
 **Create stunning Women's Day (March 8) greeting cards** 🌹
 
 Falling petals · Flying envelopes · Background music · Heart QR codes · Typewriter text
-Developed by **[NirussVn0](https://sabicoder.xyz)**.
+Developed by **[NirussVn0](https://github.com/NirussVn0)**.
 
 [Features](#-features) • [Setup](#-setup) • [Structure](#-project-structure) • [Contributing](#-contributing) • [Tiếng Việt](./README.md)
 
@@ -39,7 +39,7 @@ Developed by **[NirussVn0](https://sabicoder.xyz)**.
 * **Heart-shaped QR**: Canvas heart with embedded QR code, downloadable
 * **Sender name**: URL format `/card/sender-name-randomId`
 * **Link expiry**: Auto-delete after 10 days
-* **Watermark**: "Surprise by NirussVn0" → sabicoder.xyz
+* **Watermark**: "Surprise by NirussVn0" → github.com/NirussVn0
 * **Mobile responsive**: Beautiful on all devices
 
 ---
@@ -158,4 +158,4 @@ women-day-bloom-card/
 
 Distributed under the MIT License.
 
-Copyright © 2026 **[NirussVn0](https://sabicoder.xyz)**.
+Copyright © 2026 **[NirussVn0](https://github.com/NirussVn0)**.

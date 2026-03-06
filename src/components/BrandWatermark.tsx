@@ -28,7 +28,7 @@ export function BrandWatermark({ show }: { show: boolean }) {
   return (
     <a
       ref={badgeRef}
-      href="https://sabicoder.xyz"
+      href="https://github.com/NirussVn0"
       target="_blank"
       rel="noopener noreferrer"
       className="fixed top-4 right-[4.5rem] sm:top-6 sm:right-24 z-[999] px-6 py-3 bg-white/40 backdrop-blur-md border border-white/50 shadow-lg shadow-rose-500/10 rounded-full flex items-center gap-2.5 hover:bg-white/60 hover:scale-105 transition-all text-sm sm:text-base text-stone-700 font-medium cursor-pointer"
