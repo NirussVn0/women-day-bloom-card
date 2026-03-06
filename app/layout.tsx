@@ -1,29 +1,32 @@
-import type { Metadata } from "next";
-import { Inter, Merriweather } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Inter, Playfair_Display } from "next/font/google"
+import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const merriweather = Merriweather({ 
-  weight: ["300", "400", "700", "900"],
-  subsets: ["latin"], 
-  variable: "--font-serif" 
-});
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-sans",
+})
+
+const playfair = Playfair_Display({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-serif",
+})
 
 export const metadata: Metadata = {
-  title: "WishLink 8/3 - Beautiful, Collaborative Greeting Cards",
-  description: "Create and share beautiful International Women's Day cards with friends.",
-};
+  title: "WishLink 8/3 — Tạo thiệp chúc mừng 8/3 ✿",
+  description: "Tạo thiệp chúc mừng ngày Quốc tế Phụ nữ 8/3 đẹp mắt, gửi bất ngờ cho người đặc biệt!",
+  openGraph: {
+    title: "WishLink 8/3 ✿",
+    description: "Ai đó đã gửi cho bạn một món quà bất ngờ ngày 8/3!",
+  },
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${merriweather.variable} font-sans antialiased text-stone-900 bg-stone-50 selection:bg-rose-200 selection:text-rose-900`}>
+    <html lang="vi" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen antialiased">
         {children}
       </body>
     </html>
-  );
+  )
 }
