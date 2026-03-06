@@ -81,33 +81,34 @@ Copy file `.mp3` vào `public/music.mp3`.
 
 ```
 women-day-bloom-card/
-├── app/                        # Next.js App Router
-│   ├── layout.tsx              # Root layout + fonts
-│   ├── page.tsx                # Trang tạo thiệp
-│   ├── globals.css             # Design tokens + CSS
-│   └── card/[id]/page.tsx      # Trang xem thiệp
-│
-├── components/                 # React Components
-│   ├── BrandWatermark.tsx      # Badge thương hiệu
-│   ├── card/
-│   │   ├── CardView.tsx        # State machine 2 themes
-│   │   ├── CreatorForm.tsx     # Form tạo thiệp + QR
-│   │   ├── MemeOpening.tsx     # Mở đầu meme (chung)
-│   │   ├── EnvelopeLetter.tsx  # Theme A: phong bì mở
-│   │   ├── DodgeButton.tsx     # Theme A: nút chạy trốn
-│   │   ├── MessageReveal.tsx   # Theme A: tin nhắn reveal
-│   │   ├── RoseDrawing.tsx     # Theme B: SVG hoa hồng
-│   │   ├── EnvelopeScene.tsx   # Theme B: phong bì + hearts
-│   │   ├── LetterModal.tsx     # Theme B: thư tay modal
-│   │   ├── HeartQR.tsx         # Canvas QR trái tim
-│   │   └── MusicToggle.tsx     # Nút nhạc
-│   └── effects/
-│       ├── PetalRain.tsx       # Hiệu ứng hoa rơi
-│       └── RoseGift.tsx        # Hiệu ứng hoa nở
-│
-├── lib/                        # Business Logic
-│   ├── store.ts                # In-memory store + expiry
-│   └── actions.ts              # Server actions
+├── src/                        # Source code (Next.js src/)
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx          # Root layout + fonts
+│   │   ├── page.tsx            # Trang tạo thiệp
+│   │   ├── globals.css         # Design tokens + CSS
+│   │   └── card/[id]/page.tsx  # Trang xem thiệp
+│   │
+│   ├── components/             # React Components
+│   │   ├── BrandWatermark.tsx   # Badge thương hiệu
+│   │   ├── card/
+│   │   │   ├── CardView.tsx     # State machine 2 themes
+│   │   │   ├── CreatorForm.tsx  # Form tạo thiệp + QR
+│   │   │   ├── MemeOpening.tsx  # Mở đầu meme (chung)
+│   │   │   ├── EnvelopeLetter.tsx # Theme A: phong bì mở
+│   │   │   ├── DodgeButton.tsx  # Theme A: nút chạy trốn
+│   │   │   ├── MessageReveal.tsx # Theme A: tin nhắn reveal
+│   │   │   ├── RoseDrawing.tsx  # Theme B: SVG hoa hồng
+│   │   │   ├── EnvelopeScene.tsx # Theme B: phong bì + hearts
+│   │   │   ├── LetterModal.tsx  # Theme B: thư tay modal
+│   │   │   ├── HeartQR.tsx      # Canvas QR trái tim
+│   │   │   └── MusicToggle.tsx  # Nút nhạc
+│   │   └── effects/
+│   │       ├── PetalRain.tsx    # Hiệu ứng hoa rơi
+│   │       └── RoseGift.tsx     # Hiệu ứng hoa nở
+│   │
+│   └── lib/                    # Business Logic
+│       ├── store.ts            # In-memory store + expiry
+│       └── actions.ts          # Server actions
 │
 ├── public/                     # Static assets
 │   ├── ref/                    # Ảnh giftbox, mewmew, hearts
