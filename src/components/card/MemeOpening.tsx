@@ -16,7 +16,7 @@ export function MemeOpening({ onOpen, recipientName }: MemeOpeningProps) {
   useEffect(() => {
     if (!rootRef.current) return
 
-    // Entrance animation
+
     animate(".meme-title", {
       opacity: [0, 1],
       translateY: [-30, 0],
@@ -39,7 +39,6 @@ export function MemeOpening({ onOpen, recipientName }: MemeOpeningProps) {
       delay: 1200,
     })
 
-    // Gentle floating for the image
     animate(".meme-image-box", {
       translateY: [0, -12, 0],
       duration: 3000,
@@ -55,7 +54,6 @@ export function MemeOpening({ onOpen, recipientName }: MemeOpeningProps) {
       className="min-h-screen flex flex-col items-center justify-center px-6 bg-gradient-to-b from-rose-50 via-white to-rose-50/50 cursor-pointer select-none"
       onClick={onOpen}
     >
-      {/* Title */}
       <h1
         className="meme-title text-3xl sm:text-4xl font-serif font-bold text-rose-500 mb-8 text-center leading-snug"
         style={{ opacity: 0, fontStyle: "italic" }}
@@ -63,7 +61,6 @@ export function MemeOpening({ onOpen, recipientName }: MemeOpeningProps) {
         Cốc cốc, bó hoa đến rồi
       </h1>
 
-      {/* Meme Image Box — cute.jpeg from the user */}
       <div
         className="meme-image-box w-72 h-72 sm:w-80 sm:h-80 bg-white rounded-2xl shadow-lg border border-rose-100 flex items-center justify-center overflow-hidden relative"
         style={{ opacity: 0 }}
@@ -77,7 +74,6 @@ export function MemeOpening({ onOpen, recipientName }: MemeOpeningProps) {
         />
       </div>
 
-      {/* Hint text */}
       <p
         className="meme-hint mt-8 text-rose-400 text-sm flex items-center gap-2 animate-bounce"
         style={{ opacity: 0, fontFamily: "var(--font-cursive), 'Dancing Script', cursive" }}

@@ -2,9 +2,7 @@
 
 import { kv } from "@vercel/kv"
 
-/* ══════════════════════════════════════════════════════════════
-   CardData — Schema for a greeting card
-   ══════════════════════════════════════════════════════════════ */
+
 export interface CardData {
   id: string
   senderName: string
@@ -17,16 +15,12 @@ export interface CardData {
   expiresAt: number
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Constants
-   ══════════════════════════════════════════════════════════════ */
+
 const EXPIRY_DAYS = 10
 const EXPIRY_SECONDS = EXPIRY_DAYS * 24 * 60 * 60
 const CARD_PREFIX = "card:"
 
-/* ══════════════════════════════════════════════════════════════
-   In-Memory Fallback — Used when KV env vars are not set (local dev)
-   ══════════════════════════════════════════════════════════════ */
+
 const globalForCards = globalThis as unknown as { __cards?: Map<string, CardData>, __cardCount?: number }
 if (!globalForCards.__cards) globalForCards.__cards = new Map<string, CardData>()
 if (globalForCards.__cardCount === undefined) globalForCards.__cardCount = 0
@@ -36,9 +30,7 @@ function isKvAvailable(): boolean {
   return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
 }
 
-/* ══════════════════════════════════════════════════════════════
-   ID Generation — slug from sender name + random suffix
-   ══════════════════════════════════════════════════════════════ */
+
 function generateSlugId(senderName: string): string {
   const slug = senderName
     .toLowerCase()
@@ -52,10 +44,7 @@ function generateSlugId(senderName: string): string {
   return slug ? `${slug}-${randomPart}` : randomPart
 }
 
-/* ══════════════════════════════════════════════════════════════
-   saveCard — Persist card to KV (production) or memory (dev)
-   Redis key: "card:{id}", TTL: 10 days auto-expire
-   ══════════════════════════════════════════════════════════════ */
+
 export async function saveCard(
   senderName: string,
   recipientName: string,
@@ -75,14 +64,11 @@ export async function saveCard(
   }
 
   if (isKvAvailable()) {
-    // Production: Store in Vercel KV with auto-expire TTL
     await kv.set(`${CARD_PREFIX}${id}`, JSON.stringify(card), { ex: EXPIRY_SECONDS })
     await kv.incr("total_cards_created")
   } else {
-    // Dev fallback: in-memory Map
     globalForCards.__cardCount = (globalForCards.__cardCount || 0) + 1
     memoryStore.set(id, card)
-    // Clean up expired
     for (const [key, c] of memoryStore.entries()) {
       if (c.expiresAt < now) memoryStore.delete(key)
     }
@@ -91,19 +77,14 @@ export async function saveCard(
   return id
 }
 
-/* ══════════════════════════════════════════════════════════════
-   getCard — Read card from KV or memory
-   ══════════════════════════════════════════════════════════════ */
+
 export async function getCard(id: string): Promise<CardData | null> {
   if (isKvAvailable()) {
-    // Production: read from KV (expired keys auto-deleted by Redis TTL)
     const raw = await kv.get<string>(`${CARD_PREFIX}${id}`)
     if (!raw) return null
-    // kv.get may return already-parsed object or string
     const card: CardData = typeof raw === "string" ? JSON.parse(raw) : raw
     return card
   } else {
-    // Dev fallback
     const card = memoryStore.get(id) || null
     if (card && card.expiresAt < Date.now()) {
       memoryStore.delete(id)
@@ -113,9 +94,7 @@ export async function getCard(id: string): Promise<CardData | null> {
   }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   getCardCount — Get total number of cards created
-   ══════════════════════════════════════════════════════════════ */
+
 export async function getCardCount(): Promise<number> {
   if (isKvAvailable()) {
     return (await kv.get<number>("total_cards_created")) || 0
@@ -123,3 +102,37 @@ export async function getCardCount(): Promise<number> {
     return globalForCards.__cardCount || 0
   }
 }
+
+
+export async function getAllCards(): Promise<CardData[]> {
+  if (isKvAvailable()) {
+    try {
+      const keys = await kv.keys(`${CARD_PREFIX}*`)
+      if (!keys || keys.length === 0) return []
+      
+      const cards: CardData[] = []
+      for (const key of keys) {
+        const raw = await kv.get<string>(key)
+        if (raw) {
+          cards.push(typeof raw === "string" ? JSON.parse(raw) : raw)
+        }
+      }
+      return cards.sort((a, b) => b.createdAt - a.createdAt)
+    } catch (e) {
+      console.error("Error fetching all cards from KV:", e)
+      return []
+    }
+  } else {
+    const now = Date.now()
+    const cards: CardData[] = []
+    for (const [key, c] of memoryStore.entries()) {
+      if (c.expiresAt > now) {
+        cards.push(c)
+      } else {
+        memoryStore.delete(key)
+      }
+    }
+    return cards.sort((a, b) => b.createdAt - a.createdAt)
+  }
+}
+

@@ -17,3 +17,8 @@ export async function createCard(
 export async function fetchCard(id: string): Promise<CardData | null> {
   return getCard(id)
 }
+
+export async function verifyAdminPasscode(passcode: string): Promise<boolean> {
+  const validPasscode = process.env.ADMIN_PASSCODE || "08032026"
+  return passcode === validPasscode
+}

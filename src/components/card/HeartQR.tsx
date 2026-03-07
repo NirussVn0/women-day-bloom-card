@@ -4,18 +4,14 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import QRCode from "qrcode"
 import { PiDownloadSimpleBold, PiSpinnerBold } from "react-icons/pi"
 
-/* ══════════════════════════════════════════════════════════════
-   HeartQR — Canvas-based heart with QR code embedded inside
-   The heart is filled with decorative QR-like noise patterns
-   and the real scannable QR sits centered.
-   ══════════════════════════════════════════════════════════════ */
+
 
 interface HeartQRProps {
   url: string
   recipientName: string
 }
 
-/** Draw a filled heart path centered at (cx, cy) with given scale */
+
 function drawHeart(ctx: CanvasRenderingContext2D, cx: number, cy: number, scale: number) {
   ctx.save()
   ctx.translate(cx, cy)
@@ -28,14 +24,12 @@ function drawHeart(ctx: CanvasRenderingContext2D, cx: number, cy: number, scale:
   ctx.restore()
 }
 
-/** Generate random QR-like decorative marks inside a heart mask */
+
 function drawDecorativeNoise(ctx: CanvasRenderingContext2D, cx: number, cy: number, scale: number, color: string) {
-  // Create heart clipping region
   drawHeart(ctx, cx, cy, scale)
   ctx.save()
   ctx.clip()
 
-  // Draw random small squares to simulate QR pattern noise
   const rng = (min: number, max: number) => Math.random() * (max - min) + min
   for (let i = 0; i < 800; i++) {
     const x = cx + rng(-scale * 140, scale * 140)
@@ -65,26 +59,21 @@ export function HeartQR({ url, recipientName }: HeartQRProps) {
       canvas.width = W
       canvas.height = H
 
-      // 1. Soft background
       ctx.fillStyle = "#fae1dd"
       ctx.fillRect(0, 0, W, H)
 
-      // 2. Draw large filled heart
       const heartCx = W / 2, heartCy = 280, heartScale = 2.8
       drawHeart(ctx, heartCx, heartCy, heartScale)
       ctx.fillStyle = "#ffb5a7"
       ctx.fill()
 
-      // 3. Subtle heart outline
       drawHeart(ctx, heartCx, heartCy, heartScale)
       ctx.lineWidth = 3
       ctx.strokeStyle = "#fec5bb"
       ctx.stroke()
 
-      // 4. Draw decorative QR-like noise inside heart
       drawDecorativeNoise(ctx, heartCx, heartCy, heartScale, "#c9184a")
 
-      // 5. Generate real QR code
       const qrDataUrl = await QRCode.toDataURL(url, {
         width: 180,
         margin: 1,
@@ -96,28 +85,23 @@ export function HeartQR({ url, recipientName }: HeartQRProps) {
       qrImg.src = qrDataUrl
       await new Promise<void>((resolve) => {
         qrImg.onload = () => {
-          // 6. White circle background for QR readability
           ctx.beginPath()
           ctx.arc(heartCx, heartCy + 10, 105, 0, Math.PI * 2)
           ctx.fillStyle = "#fff"
           ctx.fill()
 
-          // 7. Draw QR centered
           const qrSize = 170
           ctx.drawImage(qrImg, heartCx - qrSize / 2, heartCy + 10 - qrSize / 2, qrSize, qrSize)
 
-          // 8. Text above QR inside heart
           ctx.textAlign = "center"
           ctx.fillStyle = "#881337"
           ctx.font = "bold 28px 'Dancing Script', cursive, serif"
           ctx.fillText(`Gửi ${recipientName}`, heartCx, heartCy - 120)
 
-          // 9. Text below heart
           ctx.fillStyle = "#881337"
           ctx.font = "italic 24px serif"
           ctx.fillText("Happy Women's Day!", W / 2, heartCy + 220)
 
-          // 10. Small decorative hearts at bottom
           const miniScale = 0.3
           const miniPositions = [
             { x: 120, y: 580 }, { x: 480, y: 580 },
@@ -129,7 +113,6 @@ export function HeartQR({ url, recipientName }: HeartQRProps) {
             ctx.fill()
           })
 
-          // 11. Branding
           ctx.fillStyle = "#a8a29e"
           ctx.font = "16px sans-serif"
           ctx.fillText("by NirussVn0", W / 2, H - 20)

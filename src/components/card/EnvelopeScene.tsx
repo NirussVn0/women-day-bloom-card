@@ -4,14 +4,7 @@ import { useRef, useEffect } from "react"
 import { animate } from "animejs"
 import { PetalRain } from "@/components/effects/PetalRain"
 
-/* ══════════════════════════════════════════════════════════════
-   EnvelopeScene — Faithful 100% port of reference 8_3.html
-   
-   Reference structure:
-     .letter > .valentines > .envelope + .front + .card + .hearts
-              .shadow
-     SVG heart text path with progressive drawing animation
-   ══════════════════════════════════════════════════════════════ */
+
 
 interface EnvelopeSceneProps {
   onOpenLetter: () => void
@@ -25,7 +18,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
   useEffect(() => {
     if (!rootRef.current || !svgRef.current) return
 
-    /* ── 1. Envelope bobbing animation (reference: @keyframes up) ── */
     animate(".env-valentines", {
       translateY: [0, -30, 0],
       duration: 3000,
@@ -33,7 +25,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
       loop: true,
     })
 
-    /* ── 2. Shadow scale (reference: @keyframes scale) ── */
     animate(".env-shadow", {
       scaleX: [1, 0.85, 1],
       duration: 3000,
@@ -41,21 +32,18 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
       loop: true,
     })
 
-    /* ── 3. Card fade in ── */
     animate(".env-card", {
       opacity: [0, 1],
       duration: 500,
       delay: 500,
     })
 
-    /* ── 4. SVG Heart ring — Progressive draw + text fade-in ── */
     const heartOutline = svgRef.current.querySelector("#heartOutline") as SVGPathElement | null
     if (heartOutline) {
       const totalLen = heartOutline.getTotalLength()
       heartOutline.style.strokeDasharray = `${totalLen}`
       heartOutline.style.strokeDashoffset = `${totalLen}`
 
-      // Draw the heart outline progressively
       animate(heartOutline, {
         strokeDashoffset: [totalLen, 0],
         duration: 3000,
@@ -64,7 +52,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
       })
     }
 
-    // Fade in the text along the path after heart draws
     animate(".svg-heart-text", {
       opacity: [0, 1],
       duration: 1500,
@@ -72,7 +59,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
       ease: "out(3)",
     })
 
-    // After everything is visible, gentle slow pulse
     setTimeout(() => {
       animate(".svg-heart-ring", {
         opacity: [1, 0.7, 1],
@@ -91,9 +77,7 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
     >
       <PetalRain />
 
-      {/* ══ CSS for hearts — must use real CSS for ::before/::after ══ */}
       <style>{`
-        /* ── Big heart on card (reference .heart) ── */
         .env-big-heart {
           background-color: #d62828;
           display: inline-block;
@@ -117,7 +101,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         .env-big-heart:before { top: -15px; left: 0; }
         .env-big-heart:after  { left: 15px; top: 0; }
 
-        /* ── Floating hearts (reference .one through .five) ── */
         .env-hearts { position: absolute; top: 0; }
         
         .env-float-heart {
@@ -154,7 +137,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         }
       `}</style>
 
-      {/* ══ SVG Heart text ring — Big, progressive draw + text fade ══ */}
       <svg
         ref={svgRef}
         className="svg-heart-ring absolute"
@@ -167,13 +149,11 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
             d="M0,21.054 C0,21.054 24.618,-15.165 60.750,8.554 C93.249,29.888 57.749,96.888 0,117.388 C-57.749,96.888 -93.249,29.888 -60.750,8.554 C-24.618,-15.165 0,21.054 0,21.054z"
           />
         </defs>
-        {/* Visible dashed heart outline — draws progressively */}
         <path
           id="heartOutline"
           d="M0,21.054 C0,21.054 24.618,-15.165 60.750,8.554 C93.249,29.888 57.749,96.888 0,117.388 C-57.749,96.888 -93.249,29.888 -60.750,8.554 C-24.618,-15.165 0,21.054 0,21.054z"
           fill="none" stroke="#fda4af" strokeWidth="0.8" strokeDasharray="4 3"
         />
-        {/* Text along heart path — fades in after heart draws */}
         <text className="svg-heart-text" dy="-3" fill="#e6668a" fontSize="8" style={{ fontFamily: "var(--font-cursive), 'Dancing Script', cursive", opacity: 0 }}>
           <textPath xlinkHref="#heartShapePath" startOffset="5%">
             🌹 Happy Women&apos;s Day 🌹 ················· 🌹 From {recipientName} With Love 8/3! 🌹
@@ -181,12 +161,9 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
         </text>
       </svg>
 
-      {/* ══ Main envelope container ══ */}
       <div className="relative z-10" style={{ width: 300, height: 320 }}>
-        {/* Valentines container (reference .valentines: top: 50px, cursor: pointer) */}
         <div className="env-valentines relative cursor-pointer" style={{ top: 50 }} onClick={onOpenLetter}>
           
-          {/* ── Floating hearts (reference .hearts > .one/.two/.three/.four/.five) ── */}
           <div className="env-hearts">
             <div className="env-float-heart env-h-one"></div>
             <div className="env-float-heart env-h-two"></div>
@@ -195,9 +172,7 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
             <div className="env-float-heart env-h-five"></div>
           </div>
 
-          {/* ── Envelope body (reference .envelope: 300x200, bg #f08080) ── */}
           <div className="relative" style={{ width: 300, height: 200, backgroundColor: "#f08080" }}>
-            {/* Envelope flap (reference .envelope:before) */}
             <div className="absolute" style={{
               width: 212, height: 212,
               backgroundColor: "#f08080",
@@ -206,7 +181,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
               borderRadius: "30px 0 0 0",
             }} />
 
-            {/* Card inside (reference .card: 270x170, bg #eae2b7) */}
             <div
               className="env-card absolute"
               style={{
@@ -215,12 +189,10 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
                 opacity: 0,
               }}
             >
-              {/* Dotted border (reference .card:before) */}
               <div className="absolute" style={{
                 border: "3px dotted #003049", width: 240, height: 140,
                 left: 12, top: 12,
               }} />
-              {/* Text (reference .text) */}
               <p style={{
                 position: "absolute", fontSize: 28, color: "#003049",
                 lineHeight: "25px", top: 19, left: 85,
@@ -228,11 +200,9 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
               }}>
                 Happy<br />Women&apos;s<br />Day!
               </p>
-              {/* Big heart (reference .heart — uses real ::before/::after) */}
               <div className="env-big-heart"></div>
             </div>
 
-            {/* Front flaps (reference .front + .front:before) */}
             <div className="absolute" style={{
               borderRight: "180px solid #f4978e",
               borderTop: "95px solid transparent",
@@ -247,7 +217,6 @@ export function EnvelopeScene({ onOpenLetter, recipientName }: EnvelopeSceneProp
           </div>
         </div>
 
-        {/* Shadow (reference .shadow) */}
         <div className="env-shadow absolute" style={{
           width: 330, height: 25, borderRadius: "50%",
           backgroundColor: "rgba(0,0,0,0.3)",

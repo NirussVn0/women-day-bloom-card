@@ -14,7 +14,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
   useEffect(() => {
     if (!rootRef.current) return
 
-    // Entrance
     animate(".envelope-group", {
       opacity: [0, 1],
       scale: [0.7, 1],
@@ -23,7 +22,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
       delay: 300,
     })
 
-    // Floating animation
     animate(".envelope-group", {
       translateY: [0, -20, 0],
       duration: 3000,
@@ -32,7 +30,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
       delay: 1200,
     })
 
-    // Shadow scale
     animate(".envelope-shadow", {
       scaleX: [1, 0.85, 1],
       duration: 3000,
@@ -41,7 +38,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
       delay: 1200,
     })
 
-    // SVG text rotation
     animate(".svg-text-ring", {
       rotate: [0, 360],
       duration: 12000,
@@ -57,7 +53,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
       style={{ backgroundColor: "#fae1dd" }}
       onClick={onOpen}
     >
-      {/* CSS for hearts matching reference exactly */}
       <style>{`
         .env-letter-hearts { position: absolute; top: 0; }
 
@@ -94,7 +89,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
           100% { transform: translateY(-150px) rotate(-45deg) scale(1.3); opacity: 0.5; }
         }
 
-        /* Big card heart */
         .env-letter-big-heart {
           background-color: #d62828;
           display: inline-block;
@@ -120,7 +114,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
       `}</style>
 
       <div className="relative" style={{ width: 320, height: 380 }}>
-        {/* Rotating SVG text ring */}
         <svg
           className="svg-text-ring absolute inset-0 w-full h-full"
           viewBox="0 0 320 320"
@@ -139,7 +132,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
           </text>
         </svg>
 
-        {/* Floating hearts — pure CSS, matching reference */}
         <div className="env-letter-hearts">
           <div className="env-letter-fh env-letter-fh-1"></div>
           <div className="env-letter-fh env-letter-fh-2"></div>
@@ -148,13 +140,10 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
           <div className="env-letter-fh env-letter-fh-5"></div>
         </div>
 
-        {/* Envelope */}
         <div className="envelope-group absolute" style={{ top: 60, left: 10, opacity: 0 }}>
           <div className="relative" style={{ width: 300, height: 200 }}>
-            {/* Main body */}
             <div className="absolute inset-0" style={{ backgroundColor: "#f08080" }} />
 
-            {/* Top flap — rotated square matching reference .envelope:before */}
             <div className="absolute" style={{
               width: 212, height: 212,
               backgroundColor: "#f08080",
@@ -163,7 +152,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
               borderRadius: "30px 0 0 0",
             }} />
 
-            {/* Card inside */}
             <div
               className="absolute"
               style={{
@@ -173,13 +161,11 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
                 boxShadow: "-5px -5px 100px rgba(0,0,0,0.4)",
               }}
             >
-              {/* Dotted border */}
               <div className="absolute" style={{
                 border: "3px dotted #003049",
                 width: 240, height: 140,
                 left: 12, top: 12,
               }} />
-              {/* Text */}
               <p style={{
                 position: "absolute", fontSize: 28, color: "#003049",
                 lineHeight: "25px", top: 19, left: 85,
@@ -187,11 +173,9 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
               }}>
                 Happy<br />Women&apos;s<br />Day!
               </p>
-              {/* Big heart — pure CSS */}
               <div className="env-letter-big-heart"></div>
             </div>
 
-            {/* Front flaps — matching reference .front + .front:before */}
             <div className="absolute" style={{
               borderRight: "180px solid #f4978e",
               borderTop: "95px solid transparent",
@@ -206,7 +190,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
           </div>
         </div>
 
-        {/* Shadow */}
         <div
           className="envelope-shadow absolute rounded-full"
           style={{
@@ -217,7 +200,6 @@ export function EnvelopeLetter({ onOpen, recipientName }: EnvelopeLetterProps) {
         />
       </div>
 
-      {/* Instruction */}
       <p className="text-rose-400 text-sm mt-4 animate-bounce" style={{ fontFamily: "var(--font-cursive), 'Dancing Script', cursive" }}>
         🌺 Chạm để mở thiệp bất ngờ... 🌺
       </p>

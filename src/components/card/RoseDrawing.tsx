@@ -16,7 +16,6 @@ export function RoseDrawing({ onComplete }: RoseDrawingProps) {
 
     const paths = svgRef.current.querySelectorAll(".rose-path")
 
-    // Set initial stroke state
     paths.forEach((path) => {
       const el = path as SVGPathElement
       const len = el.getTotalLength()
@@ -27,7 +26,6 @@ export function RoseDrawing({ onComplete }: RoseDrawingProps) {
       el.style.strokeDashoffset = `${len}`
     })
 
-    // Animate stroke drawing per-path
     paths.forEach((path, idx) => {
       const el = path as SVGPathElement
       const len = el.getTotalLength()
@@ -38,7 +36,6 @@ export function RoseDrawing({ onComplete }: RoseDrawingProps) {
         delay: idx * 200,
         complete: () => {
           if (idx === paths.length - 1) {
-            // Fill colors on last path complete
             const colors: Record<string, string> = {
               leafOne: "#9CDD05",
               stickLine: "#83AA2E",
@@ -62,7 +59,6 @@ export function RoseDrawing({ onComplete }: RoseDrawingProps) {
                 }
               }
             })
-            // Show click text after fill
             setTimeout(() => setShowClick(true), 1000)
           }
         },

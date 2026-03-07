@@ -15,10 +15,8 @@ import { EnvelopeScene } from "./EnvelopeScene"
 import { LetterModal } from "./LetterModal"
 import { PiFlowerTulipFill, PiHeartFill, PiGiftFill, PiSparkle } from "react-icons/pi"
 
-/* ─── Theme A (catch-me) stages ─── */
 type CatchMeStage = "meme" | "envelope" | "question" | "dodging" | "rose" | "reveal"
 
-/* ─── Theme B (love-letter) stages ─── */
 type LoveLetterStage = "meme" | "roseDrawing" | "envelopeScene" | "letterModal"
 
 interface CardViewProps {
@@ -31,14 +29,11 @@ interface CardViewProps {
 }
 
 export function CardView({ recipientName, message, theme = "catch-me", recipientImage, senderName, customMusic }: CardViewProps) {
-  /* ─── Theme A state ─── */
   const [catchStage, setCatchStage] = useState<CatchMeStage>("meme")
-  /* ─── Theme B state ─── */
   const [letterStage, setLetterStage] = useState<LoveLetterStage>("meme")
 
   const stageRef = useRef<HTMLDivElement>(null)
 
-  // Animate stage entrance for catch-me stages
   useEffect(() => {
     if (stageRef.current && theme === "catch-me" && catchStage !== "meme" && catchStage !== "envelope") {
       animate(stageRef.current, {
@@ -59,16 +54,11 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Brand watermark badge at top right */}
       <BrandWatermark show={showWatermark} />
 
-      {/* Music toggle — always visible */}
       <MusicToggle src={customMusic} />
 
-      {/* ═══════════════════════════════════════════════
-          THEME A: Catch Me (flower)
-          meme → envelope → question → dodging → rose → reveal
-         ═══════════════════════════════════════════════ */}
+
       {!isLoveLetter && (
         <>
           {catchStage === "meme" && (
@@ -162,10 +152,7 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
         </>
       )}
 
-      {/* ═══════════════════════════════════════════════
-          THEME B: Love Letter
-          meme → roseDrawing → envelopeScene → letterModal
-         ═══════════════════════════════════════════════ */}
+
       {isLoveLetter && (
         <>
           {letterStage === "meme" && (

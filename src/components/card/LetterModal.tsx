@@ -6,10 +6,6 @@ import { PiXBold } from "react-icons/pi"
 import Image from "next/image"
 import { PetalRain } from "@/components/effects/PetalRain"
 
-/* ══════════════════════════════════════════════════════════════
-   HeartDecor — Pure CSS heart matching reference .heartLetterItem
-   Reference: .heartLetter 30x30 circle, .heartLetterItem 10x10
-   ══════════════════════════════════════════════════════════════ */
 function HeartDecor({ position }: { position: "top-right" | "bottom-left" }) {
   const pos = position === "top-right"
     ? { right: 5, top: 10 }
@@ -25,9 +21,6 @@ function HeartDecor({ position }: { position: "top-right" | "bottom-left" }) {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════
-   FloatingHeartsDecor — Decorative mini hearts inside the letter
-   ══════════════════════════════════════════════════════════════ */
 function FloatingHeartsDecor() {
   const hearts = [
     { right: 60, top: "30%", size: 8, opacity: 0.4 },
@@ -50,11 +43,6 @@ function FloatingHeartsDecor() {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════
-   GiftSection — Left 40% of the letter with image
-   Reference: .giftbox { width: 40%; height: 100% }
-              .giftbox .img { width: 180px; bottom: -10px; left: 50px }
-   ══════════════════════════════════════════════════════════════ */
 function GiftSection({ recipientImage }: { recipientImage?: string }) {
   return (
     <div style={{ position: "relative", width: "40%", height: "100%", overflow: "hidden" }}>
@@ -79,12 +67,6 @@ function GiftSection({ recipientImage }: { recipientImage?: string }) {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════
-   LetterTextContent — Right side of the letter with typewriter text
-   Reference: .textLetter { width: 100%, flex-direction: column }
-              h2: 30px Dancing Script
-              .contentLetter: 19px Dancing Script
-   ══════════════════════════════════════════════════════════════ */
 function LetterTextContent({ titleText, bodyText, senderName }: { titleText: string; bodyText: string; senderName: string }) {
   return (
     <div style={{
@@ -120,14 +102,7 @@ function LetterTextContent({ titleText, bodyText, senderName }: { titleText: str
   )
 }
 
-/* ══════════════════════════════════════════════════════════════
-   LetterModal — Main Letter Component
-   Reference: .formLetter { width: 600px; height: 350px; bg: #FFEBEB }
-              .wrapperLetter { border: 2px dashed #FF6666 }
-              .before { transform: rotate(-15deg); bg: #fff }
-              .heartAnimation { width: 200px; bottom: 0 }
-              .mewmew { width: 90px }
-   ══════════════════════════════════════════════════════════════ */
+
 
 interface LetterModalProps {
   recipientName: string
@@ -195,12 +170,9 @@ export function LetterModal({ recipientName, message, recipientImage, senderName
         <PiXBold className="w-5 h-5" />
       </button>
 
-      {/* Container matching reference .boxLetter — responsive */}
       <div className="relative flex items-center justify-center" style={{ width: "100%", maxWidth: 700 }}>
-        {/* White rotated background — reference .before */}
         <div className="letter-before absolute bg-white rounded-2xl hidden sm:block" style={{ width: "min(600px, 90vw)", height: "min(350px, 60vh)", transform: "rotate(-15deg)", zIndex: 10, opacity: 0 }} />
 
-        {/* Main pink letter — responsive: compact on mobile */}
         <div className="form-letter relative rounded-2xl shadow-lg" style={{
           width: "min(600px, 85vw)",
           height: "min(350px, 50vh)",
@@ -213,7 +185,6 @@ export function LetterModal({ recipientName, message, recipientImage, senderName
           <HeartDecor position="top-right" />
           <HeartDecor position="bottom-left" />
 
-          {/* Dashed border wrapper — reference .wrapperLetter */}
           <div className="relative w-full h-full rounded-2xl flex overflow-hidden" style={{ border: "2px dashed #FF6666" }}>
             {/* Left: Gift image */}
             <GiftSection recipientImage={recipientImage} />
@@ -225,12 +196,10 @@ export function LetterModal({ recipientName, message, recipientImage, senderName
             <LetterTextContent titleText={titleText} bodyText={bodyText} senderName={senderName} />
           </div>
 
-          {/* Heart animation at bottom center — reference .heartAnimation: 200px, scaled on mobile */}
           <div className="absolute" style={{ bottom: -10, left: "50%", transform: "translateX(-50%)", width: "clamp(120px, 35%, 200px)", zIndex: 50 }}>
             <Image src="/ref/heartAnimation.gif" alt="Hearts" width={200} height={200} unoptimized className="w-full h-auto" />
           </div>
 
-          {/* Cat gifs at bottom corners — reference .mewmew: scaled on mobile */}
           <div className="absolute" style={{ bottom: 0, left: 0, width: "clamp(50px, 15%, 90px)", zIndex: 150 }}>
             <Image src="/ref/mewmew.gif" alt="Cat" width={90} height={90} unoptimized className="w-full h-auto" />
           </div>
