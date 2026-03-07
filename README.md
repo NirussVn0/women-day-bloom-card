@@ -114,8 +114,6 @@ women-day-bloom-card/
 │   ├── ref/                    # Ảnh giftbox, mewmew, hearts
 │   ├── cute.jpeg               # Ảnh meme opening
 │   └── music.mp3               # Nhạc nền (tự thêm)
-│
-└── reference_8_3/              # Code HTML tham khảo gốc
 ```
 
 ---
