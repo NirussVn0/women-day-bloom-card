@@ -139,7 +139,7 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
           )}
           {catchStage === "reveal" && (
             <div ref={stageRef} style={{ opacity: 0 }}>
-              <MessageReveal recipientName={recipientName} message={message} senderName={senderName} />
+              <MessageReveal recipientName={recipientName} message={message} senderName={senderName} recipientImage={recipientImage} />
             </div>
           )}
         </>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { animate, createTimeline } from "animejs"
 import confetti from "canvas-confetti"
+import Image from "next/image"
 import { PetalRain } from "@/components/effects/PetalRain"
 import { PiHeartFill } from "react-icons/pi"
 
@@ -10,9 +11,10 @@ interface MessageRevealProps {
   recipientName: string
   message: string
   senderName: string
+  recipientImage?: string
 }
 
-export function MessageReveal({ recipientName, message, senderName }: MessageRevealProps) {
+export function MessageReveal({ recipientName, message, senderName, recipientImage }: MessageRevealProps) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -57,6 +59,15 @@ export function MessageReveal({ recipientName, message, senderName }: MessageRev
       ease: "out(4)",
     }, 500)
 
+    tl.add(".polaroid-photo", {
+      opacity: [0, 1],
+      translateY: [20, 0],
+      scale: [0.9, 1],
+      rotate: [-5, 3],
+      duration: 800,
+      ease: "out(3)",
+    }, 700)
+
     tl.add(".reveal-heading", {
       opacity: [0, 1],
       translateY: [25, 0],
@@ -88,10 +99,29 @@ export function MessageReveal({ recipientName, message, senderName }: MessageRev
       <div className="glow-orb w-80 h-80 bg-rose-200 top-[10%] left-[5%]" />
       <div className="glow-orb w-64 h-64 bg-orange-100 bottom-[10%] right-[5%]" style={{ animationDelay: "2s" }} />
 
-      <div className="relative z-10 text-center max-w-2xl mx-auto">
+      <div className="relative z-10 text-center max-w-2xl mx-auto w-full">
         <p className="reveal-subtitle text-rose-400 font-medium mb-3 text-sm tracking-widest uppercase" style={{ opacity: 0 }}>
           Happy Women&apos;s Day
         </p>
+
+        {recipientImage && (
+          <div 
+            className="polaroid-photo mx-auto mb-6 bg-white p-2.5 pb-8 sm:p-3 sm:pb-10 shadow-lg rounded-sm w-32 h-40 sm:w-40 sm:h-48 flex-shrink-0 relative transform rotate-3"
+            style={{ opacity: 0 }}
+          >
+            <div className="relative w-full h-full bg-stone-100 overflow-hidden">
+              <Image
+                src={recipientImage}
+                alt="Người nhận"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+            {/* Vệt dán băng keo (tuỳ chọn) */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-stone-200/60 rotate-2 backdrop-blur-sm shadow-sm" />
+          </div>
+        )}
 
         <h1 className="reveal-heading text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-stone-900 mb-6 leading-tight" style={{ opacity: 0 }}>
           Gửi{" "}
