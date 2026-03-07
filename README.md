@@ -7,7 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Anime.js](https://img.shields.io/badge/Anime.js-4-FF6B6B?style=for-the-badge)](https://animejs.com/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](./LICENSE)
 
 **Tạo thiệp chúc mừng Ngày Phụ nữ 8/3 với hiệu ứng đẹp mắt** 🌹
 
@@ -155,6 +155,6 @@ women-day-bloom-card/
 
 ## 📄 License
 
-Distributed under the MIT License.
+Distributed under the GNU General Public License v3.0. See `LICENSE` for more information.
 
 Copyright © 2026 **[NirussVn0](https://github.com/NirussVn0)**.
