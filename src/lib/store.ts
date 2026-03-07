@@ -27,8 +27,9 @@ const CARD_PREFIX = "card:"
 /* ══════════════════════════════════════════════════════════════
    In-Memory Fallback — Used when KV env vars are not set (local dev)
    ══════════════════════════════════════════════════════════════ */
-const globalForCards = globalThis as unknown as { __cards?: Map<string, CardData> }
+const globalForCards = globalThis as unknown as { __cards?: Map<string, CardData>, __cardCount?: number }
 if (!globalForCards.__cards) globalForCards.__cards = new Map<string, CardData>()
+if (globalForCards.__cardCount === undefined) globalForCards.__cardCount = 0
 const memoryStore = globalForCards.__cards
 
 function isKvAvailable(): boolean {
@@ -76,8 +77,10 @@ export async function saveCard(
   if (isKvAvailable()) {
     // Production: Store in Vercel KV with auto-expire TTL
     await kv.set(`${CARD_PREFIX}${id}`, JSON.stringify(card), { ex: EXPIRY_SECONDS })
+    await kv.incr("total_cards_created")
   } else {
     // Dev fallback: in-memory Map
+    globalForCards.__cardCount = (globalForCards.__cardCount || 0) + 1
     memoryStore.set(id, card)
     // Clean up expired
     for (const [key, c] of memoryStore.entries()) {
@@ -107,5 +110,16 @@ export async function getCard(id: string): Promise<CardData | null> {
       return null
     }
     return card
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   getCardCount — Get total number of cards created
+   ══════════════════════════════════════════════════════════════ */
+export async function getCardCount(): Promise<number> {
+  if (isKvAvailable()) {
+    return (await kv.get<number>("total_cards_created")) || 0
+  } else {
+    return globalForCards.__cardCount || 0
   }
 }

@@ -2,8 +2,13 @@ import { CreatorForm } from "@/components/card/CreatorForm"
 import { PetalRain } from "@/components/effects/PetalRain"
 import { Footer } from "@/components/Footer"
 import { PiFlowerTulipFill } from "react-icons/pi"
+import { getCardCount } from "@/lib/store"
 
-export default function HomePage() {
+export const revalidate = 60 // Revalidate cache every 60 seconds
+
+export default async function HomePage() {
+  const cardCount = await getCardCount()
+
   return (
     <main className="min-h-screen flex flex-col relative overflow-hidden">
       <PetalRain />
@@ -30,6 +35,9 @@ export default function HomePage() {
           <p className="text-stone-500 text-lg max-w-md mx-auto leading-relaxed">
             Tạo thiệp bất ngờ với hiệu ứng cực cute — gửi qua link, không cần đăng nhập!
           </p>
+          <div className="mt-4 px-4 py-2 bg-rose-50/80 backdrop-blur-sm border border-rose-100 rounded-full inline-flex items-center gap-2 text-rose-600 text-sm font-medium animate-pulse">
+            Đã có <span className="font-bold text-rose-700 text-base">{cardCount}</span> tấm thiệp được tạo! 💌
+          </div>
         </div>
 
         {/* Creator Form */}
