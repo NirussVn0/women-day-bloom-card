@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { animate } from "animejs"
 import { MemeOpening } from "./MemeOpening"
-import { EnvelopeLetter } from "./EnvelopeLetter"
 import { DodgeButton } from "./DodgeButton"
 import { MessageReveal } from "./MessageReveal"
 import { MusicToggle } from "./MusicToggle"
@@ -15,7 +14,7 @@ import { EnvelopeScene } from "./EnvelopeScene"
 import { LetterModal } from "./LetterModal"
 import { PiFlowerTulipFill, PiHeartFill, PiGiftFill, PiSparkle } from "react-icons/pi"
 
-type CatchMeStage = "meme" | "envelope" | "question" | "dodging" | "rose" | "reveal"
+type CatchMeStage = "meme" | "question" | "dodging" | "rose" | "reveal"
 
 type LoveLetterStage = "meme" | "roseDrawing" | "envelopeScene" | "letterModal"
 
@@ -35,7 +34,7 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
   const stageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (stageRef.current && theme === "catch-me" && catchStage !== "meme" && catchStage !== "envelope") {
+    if (stageRef.current && theme === "catch-me" && catchStage !== "meme") {
       animate(stageRef.current, {
         opacity: [0, 1],
         duration: 600,
@@ -63,12 +62,6 @@ export function CardView({ recipientName, message, theme = "catch-me", recipient
         <>
           {catchStage === "meme" && (
             <MemeOpening
-              recipientName={recipientName}
-              onOpen={() => setCatchStage("envelope")}
-            />
-          )}
-          {catchStage === "envelope" && (
-            <EnvelopeLetter
               recipientName={recipientName}
               onOpen={() => setCatchStage("question")}
             />
