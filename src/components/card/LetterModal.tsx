@@ -75,7 +75,7 @@ function LetterTextContent({ titleText, bodyText, senderName }: { titleText: str
       padding: "10px 12px", overflow: "hidden",
     }}>
       <h2 style={{
-        fontSize: "clamp(18px, 4vw, 30px)", fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
+        fontSize: "clamp(16px, 3.5vw, 26px)", fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
         fontWeight: 700, color: "#292524", marginBottom: 4, flexShrink: 0,
       }}>
         {titleText}
@@ -83,7 +83,7 @@ function LetterTextContent({ titleText, bodyText, senderName }: { titleText: str
       </h2>
       <div style={{ flex: 1, overflowY: "auto", width: "100%", minHeight: 0 }}>
         <p style={{
-          fontSize: "clamp(13px, 2.5vw, 19px)", textAlign: "center", padding: "0 6px",
+          fontSize: "clamp(13px, 2vw, 17px)", textAlign: "center", padding: "0 6px",
           marginTop: 6, fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
           color: "#44403c", lineHeight: 1.5, wordBreak: "break-word",
         }}>
@@ -91,7 +91,7 @@ function LetterTextContent({ titleText, bodyText, senderName }: { titleText: str
         </p>
       </div>
       <p style={{
-        fontSize: "clamp(14px, 3vw, 22px)", fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
+        fontSize: "clamp(13px, 2.5vw, 19px)", fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
         color: "#e11d48", fontWeight: 700, flexShrink: 0,
         textAlign: "right", width: "100%", paddingRight: 10, marginTop: 4,
         opacity: bodyText.length > 0 ? 1 : 0, transition: "opacity 1s",
@@ -170,12 +170,12 @@ export function LetterModal({ recipientName, message, recipientImage, senderName
         <PiXBold className="w-5 h-5" />
       </button>
 
-      <div className="relative flex items-center justify-center" style={{ width: "100%", maxWidth: 700 }}>
-        <div className="letter-before absolute bg-white rounded-2xl hidden sm:block" style={{ width: "min(600px, 90vw)", height: "min(350px, 60vh)", transform: "rotate(-15deg)", zIndex: 10, opacity: 0 }} />
+      <div className="relative flex items-center justify-center" style={{ width: "100%", maxWidth: 800 }}>
+        <div className="letter-before absolute bg-white rounded-2xl hidden sm:block" style={{ width: "min(700px, 90vw)", height: "min(400px, 60vh)", transform: "rotate(-15deg)", zIndex: 10, opacity: 0 }} />
 
         <div className="form-letter relative rounded-2xl shadow-lg" style={{
-          width: "min(600px, 85vw)",
-          height: "min(350px, 50vh)",
+          width: "min(700px, 85vw)",
+          height: "min(400px, 55vh)",
           backgroundColor: "#FFEBEB",
           zIndex: 100,
           padding: "12px 8px",
