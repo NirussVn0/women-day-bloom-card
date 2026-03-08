@@ -35,7 +35,7 @@ Developed by **[NirussVn0](https://github.com/NirussVn0)**.
 
 ### 📱 Tính Năng Khác
 * **Nhạc nền**: Auto-play + nút bật/tắt luôn hiển thị
-* **Upload ảnh**: Ảnh người nhận hiển thị trong thư (max 500KB)
+* **Upload ảnh**: Ảnh người nhận hiển thị trong thư (max 5MB)
 * **QR trái tim**: Canvas heart-shaped với mã QR bên trong, tải về gửi
 * **Tên người gửi**: URL dạng `/card/ten-nguoi-gui-randomId`
 * **Link hết hạn**: Tự động xoá sau 10 ngày

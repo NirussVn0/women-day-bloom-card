@@ -35,7 +35,7 @@ Developed by **[NirussVn0](https://github.com/NirussVn0)**.
 
 ### 📱 Other Features
 * **Background music**: Auto-play + always-visible toggle
-* **Image upload**: Recipient photo in the letter (max 500KB)
+* **Image upload**: Recipient photo in the letter (max 5MB)
 * **Heart-shaped QR**: Canvas heart with embedded QR code, downloadable
 * **Sender name**: URL format `/card/sender-name-randomId`
 * **Link expiry**: Auto-delete after 10 days

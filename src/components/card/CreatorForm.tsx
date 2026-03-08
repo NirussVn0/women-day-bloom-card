@@ -60,9 +60,9 @@ export function CreatorForm() {
   const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    // Max 500KB to keep in-memory store reasonable
-    if (file.size > 512000) {
-      alert("Ảnh quá lớn, vui lòng chọn ảnh dưới 500KB")
+    // Max 5MB to keep in-memory store reasonable
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB")
       return
     }
     const reader = new FileReader()
@@ -75,9 +75,9 @@ export function CreatorForm() {
   const handleMusicChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    // Max 2MB for music
-    if (file.size > 2 * 1024 * 1024) {
-      alert("File nhạc quá lớn, vui lòng chọn file dưới 2MB")
+    // Max 5MB for music
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File nhạc quá lớn, vui lòng chọn file dưới 5MB")
       return
     }
     setMusicName(file.name)
