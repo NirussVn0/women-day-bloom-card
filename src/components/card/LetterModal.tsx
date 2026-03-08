@@ -85,7 +85,7 @@ function LetterTextContent({ titleText, bodyText, senderName }: { titleText: str
         <p style={{
           fontSize: "clamp(13px, 2vw, 17px)", textAlign: "center", padding: "0 6px",
           marginTop: 6, fontFamily: "var(--font-cursive), 'Dancing Script', cursive",
-          color: "#44403c", lineHeight: 1.5, wordBreak: "break-word",
+          color: "#44403c", lineHeight: 1.5, wordBreak: "break-word", whiteSpace: "pre-wrap"
         }}>
           {bodyText}
         </p>
