@@ -51,7 +51,7 @@ export async function saveCard(
   message: string,
   theme?: string,
   recipientImage?: string,
-  customMusic?: string
+  hasCustomMusic?: boolean
 ): Promise<string> {
   const id = generateSlugId(senderName)
   const now = Date.now()
@@ -59,7 +59,7 @@ export async function saveCard(
 
   const card: CardData = {
     id, senderName, recipientName, message,
-    theme, recipientImage, customMusic,
+    theme, recipientImage, customMusic: hasCustomMusic ? "chunked" : undefined,
     createdAt: now, expiresAt,
   }
 
@@ -77,21 +77,65 @@ export async function saveCard(
   return id
 }
 
+const memoryMusicChunks = new Map<string, Map<number, string>>();
+const memoryMusicCounts = new Map<string, number>();
+
+export async function saveMusicChunk(id: string, chunkIndex: number, chunkData: string) {
+  if (isKvAvailable()) {
+    await kv.set(`card_music_${id}_${chunkIndex}`, chunkData, { ex: EXPIRY_SECONDS })
+  } else {
+    if (!memoryMusicChunks.has(id)) memoryMusicChunks.set(id, new Map());
+    memoryMusicChunks.get(id)!.set(chunkIndex, chunkData);
+  }
+}
+
+export async function finalizeMusicUpload(id: string, totalChunks: number) {
+  if (isKvAvailable()) {
+    await kv.set(`card_music_${id}_count`, totalChunks, { ex: EXPIRY_SECONDS })
+  } else {
+    memoryMusicCounts.set(id, totalChunks);
+  }
+}
 
 export async function getCard(id: string): Promise<CardData | null> {
+  let card: CardData | null = null;
   if (isKvAvailable()) {
     const raw = await kv.get<string>(`${CARD_PREFIX}${id}`)
     if (!raw) return null
-    const card: CardData = typeof raw === "string" ? JSON.parse(raw) : raw
-    return card
+    card = typeof raw === "string" ? JSON.parse(raw) : raw
   } else {
-    const card = memoryStore.get(id) || null
+    card = memoryStore.get(id) || null
     if (card && card.expiresAt < Date.now()) {
       memoryStore.delete(id)
       return null
     }
-    return card
   }
+
+  if (card && card.customMusic === "chunked") {
+    let count = 0;
+    if (isKvAvailable()) {
+      count = (await kv.get<number>(`card_music_${id}_count`)) || 0;
+    } else {
+      count = memoryMusicCounts.get(id) || 0;
+    }
+
+    if (count > 0) {
+      if (isKvAvailable()) {
+        const keys = Array.from({length: count}).map((_, i) => `card_music_${id}_${i}`)
+        const chunks = await kv.mget<string[]>(...keys)
+        card.customMusic = chunks.join("")
+      } else {
+        const chunksMap = memoryMusicChunks.get(id);
+        const chunks = [];
+        for (let i = 0; i < count; i++) {
+          chunks.push(chunksMap?.get(i) || "");
+        }
+        card.customMusic = chunks.join("");
+      }
+    }
+  }
+
+  return card;
 }
 
 

@@ -1,6 +1,12 @@
 "use server"
 
-import { saveCard, getCard, type CardData } from "@/lib/store"
+import {
+  saveCard,
+  getCard,
+  saveMusicChunk as saveChunkStore,
+  finalizeMusicUpload as finalizeMusicStore,
+  type CardData,
+} from "@/lib/store"
 
 export async function createCard(
   senderName: string,
@@ -8,10 +14,25 @@ export async function createCard(
   message: string,
   theme?: string,
   recipientImage?: string,
-  customMusic?: string
+  hasCustomMusic?: boolean
 ): Promise<string> {
-  const id = await saveCard(senderName, recipientName, message, theme, recipientImage, customMusic)
+  const id = await saveCard(
+    senderName,
+    recipientName,
+    message,
+    theme,
+    recipientImage,
+    hasCustomMusic
+  )
   return id
+}
+
+export async function uploadMusicChunk(id: string, chunkIndex: number, chunkData: string) {
+  await saveChunkStore(id, chunkIndex, chunkData)
+}
+
+export async function finalizeMusicUpload(id: string, totalChunks: number) {
+  await finalizeMusicStore(id, totalChunks)
 }
 
 export async function fetchCard(id: string): Promise<CardData | null> {

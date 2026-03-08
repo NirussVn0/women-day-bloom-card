@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition, useRef, useEffect, useCallback } from "react"
-import { createCard } from "@/lib/actions"
+import { createCard, uploadMusicChunk, finalizeMusicUpload } from "@/lib/actions"
 import { animate } from "animejs"
 import {
   PiArrowRightBold, PiCopyBold, PiCheckBold, PiSparkle,
@@ -57,7 +57,42 @@ export function CreatorForm() {
     }
   }, [result])
 
-  const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_DIM = 1000;
+          if (width > height) {
+            if (width > MAX_DIM) {
+              height *= MAX_DIM / width;
+              width = MAX_DIM;
+            }
+          } else {
+            if (height > MAX_DIM) {
+              width *= MAX_DIM / height;
+              height = MAX_DIM;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        };
+        img.onerror = reject;
+        img.src = event.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleImageChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     // Max 5MB to keep in-memory store reasonable
@@ -65,11 +100,13 @@ export function CreatorForm() {
       alert("Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB")
       return
     }
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setRecipientImage(reader.result as string)
+    try {
+      const compressed = await compressImage(file)
+      setRecipientImage(compressed)
+    } catch (err) {
+      console.error(err)
+      alert("Lỗi khi xử lý ảnh!")
     }
-    reader.readAsDataURL(file)
   }, [])
 
   const handleMusicChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +130,26 @@ export function CreatorForm() {
     if (!senderName.trim() || !recipientName.trim() || !message.trim()) return
 
     startTransition(async () => {
-      const res = await createCard(senderName, recipientName, message, theme, recipientImage, customMusic)
-      setResult(res)
+      try {
+        const res = await createCard(senderName, recipientName, message, theme, recipientImage, !!customMusic)
+        
+        if (customMusic) {
+          const CHUNK_SIZE = 500000;
+          const chunks = [];
+          for (let i = 0; i < customMusic.length; i += CHUNK_SIZE) {
+            chunks.push(customMusic.substring(i, i + CHUNK_SIZE));
+          }
+          for (let i = 0; i < chunks.length; i++) {
+            await uploadMusicChunk(res, i, chunks[i]);
+          }
+          await finalizeMusicUpload(res, chunks.length);
+        }
+
+        setResult(res)
+      } catch (err) {
+        console.error("Error creating card:", err)
+        alert("Đã có lỗi xảy ra khi tạo thiệp. Hãy thử lại (do file quá lớn hoặc lỗi kết nối).")
+      }
     })
   }
 
